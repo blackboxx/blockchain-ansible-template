@@ -1,0 +1,298 @@
+- name: Create & configure Azure blockchain infrastructure
+  hosts: localhost
+  connection: local
+  vars:
+    subscription_id: 315e66d2-b933-43ae-9af1-e401260cff54
+    adminPassword: MojeSuperTajneHeslo22
+    ethereumAccountPsswd: '{{ adminPassword }}'
+    ethereumAccountPassphrase: '{{ adminPassword }}'
+    adminSSHKey: "ssh-rsa
+AAAAB3NzaC1yc2EAAAABJQAAAQEAjzz6DGtXvAkWhgmqKpUx4kTyuQCmjStL1CB/
+L5ZFaLfEBUA52tY8jzWih8AojoGJFiQv+2mPyIKi1k7zKpsbWDtxbAkAeCKhb+Gv
+on3ITNSSV17900qBySgrNpf35s/yKH7lVuMyVAU7GSrBMxEZwvG8L6w3uoacsATp
+AxMALyWBEzmySIm9iTM/6ks3Q7Ru4HWXLrfupVHfkZqwqhK1yywbZ+EcDTw4AO0N
+GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
+77MZ1MuBLfqP6qHDuRDQ1Du9k9Jw/BeYQ5+XB+RwWZyPM7Q1UQ"
+    artifactsLocationURL: https://traskethtemplates.blob.core.windows.net/template
+    rgname: testik
+    namePrefix: eth
+    companyName: trask
+    namingInfix: '{{ namePrefix + companyName }}'
+    adminUsername: gethadmin
+    ethereumNetworkId: 72
+    maxPeers: 25
+    location: westeurope
+    numConsortiumMembers: 2
+    numMiningNodesPerMember: 1
+    txStorageAccountType: Standard_LRS
+    txNodeVMSize: Standard_A1_v2
+    numTXNodes: 1
+    mnStorageAccountType: Standard_LRS
+    mnNodeVMSize: Standard_A1_v2
+    availabilitySetName: AvSet
+    httpPort: 80
+    adminSitePort: 3000
+    sshPort: 22
+    sshNATFrontEndStartingPort: 3000
+    gethRPCPort: 8545
+    gethIPCPort: 30303
+    loadBalancerInboundNatRuleNamePrefix: ssh-vm
+    numMNNodes: '{{ (numConsortiumMembers * numMiningNodesPerMember) }}'
+    loadBalancerName: '{{ namingInfix + "-lb" }}'
+    loadBalancerBackendAddressPoolName: LoadBalancerBackend1
+    maxVMsPerStorageAcct: 20
+    mnStorageAcctCount: '{{ (((numMNNodes)|int / maxVMsPerStorageAcct)|int) + 1 }}'
+    mnVMNamePrefix: '{{ namingInfix + "-mn" }}'
+    mnNICPrefix: nic-mn
+    txStorageAcctName: '{{ namingInfix + "tx" }}'
+    txVMNamePrefix: '{{ namingInfix + "-tx" }}'
+    txSubnetName: '{{ namingInfix + "tx" }}'
+    txSubnetPrefix: 10.0.0.0/24
+    txSubnetRef: '{{ vnetID + "/subnets/" + txSubnetName }}'
+    txNIPrefix: nic-tx
+    virtualNetworkName: '{{ namingInfix + "vnet" }}'
+    txNsgName: '{{ namingInfix + "TXNsg" }}'
+    mnNsgName: '{{ namingInfix + "MNNsg" }}'
+    addressPrefix: 10.0.0.0/20
+    vnetID: '{{ "/subscriptions/" + subscription_id + "/resourceGroup/" + rgname + "/providers/Microsoft.Network/virtualNetworks" }}'
+    numSubnets: '{{ numConsortiumMembers }}'
+    lbID: "[resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName'))]"
+    dnsHostName: sajdjdsfdskfj76
+    lbPublicIPAddressName: '{{ dnsHostName + "-publicip" }}'
+    lbFrontEndIpConfigName: LoadBalancerFrontEnd
+    lbFrontEndIPConfigID: '{{ lbID + "/frontendIPConfigurations/" + lbFrontEndIpConfigName }}'
+    lbBackendAddressPoolID: '{{ lbID + "/backendAddressPools/" + loadBalancerBackendAddressPoolName }}'
+    loadBalancerInboundNatRuleIDprefix: '{{ lbID + "/inboundNatRules/" + loadBalancerInboundNatRuleNamePrefix }}'
+    ubuntuImage: {
+      "publisher": "Canonical",
+      "offer": "UbuntuServer",
+      "sku": "16.04-LTS",
+      "version": "latest"
+    }
+    apiVersionStorageAccounts: "2016-01-01"
+    genesisBlock: ""
+
+  tasks:
+
+# Creating Resource Group
+  - name: Create resource group
+    azure_rm_resourcegroup:
+      name: '{{ rgname }}'
+      location: '{{ location }}'
+
+# Creating Virtual Network
+  - name: Create virtual network
+    azure_rm_virtualnetwork:
+      resource_group: '{{ rgname }}'
+      name: '{{ virtualNetworkName }}'
+      address_prefixes: '{{ addressPrefix }}'
+
+# Creating NSG for MN nodes
+  - name: Create NSG for mining nodes
+    azure_rm_securitygroup:
+      resource_group: '{{ rgname }}'
+      name: '{{ mnNsgName }}'
+      rules:
+        - name: block-bootnodes
+          description: Block Internet Bootnodes
+          protocol: "*"
+          destination_port_range: 30303
+          source_port_range: "*"
+          source_address_prefix: "*"
+          destination_address_prefix: Internet
+          access: Deny
+          priority: 100
+          direction: Outbound
+
+# Creating NSG for TX nodes
+  - name: Create NSG for transaction nodes
+    azure_rm_securitygroup:
+      resource_group: '{{ rgname }}'
+      name: '{{ txNsgName }}'
+      rules:
+        - name: allow-ssh
+          description: Allow SSH
+          protocol: "*"
+          destination_port_range: 22
+          source_port_range: "*"
+          source_address_prefix: "*"
+          destination_address_prefix: "*"
+          access: Allow
+          priority: 100
+          direction: Inbound
+        - name: allow-geth-rpc
+          description: Allow geth RPC
+          protocol: "*"
+          destination_port_range: 8545
+          source_port_range: "*"
+          source_address_prefix: "*"
+          destination_address_prefix: "*"
+          access: Allow
+          priority: 101
+          direction: Inbound
+        - name: allow-etheradmin
+          description: Allow etheradmin web service
+          protocol: "*"
+          destination_port_range: 3000
+          source_port_range: "*"
+          source_address_prefix: "*"
+          destination_address_prefix: "*"
+          access: Allow
+          priority: 102
+          direction: Inbound
+        - name: block-bootnodes
+          description: Block Internet Bootnodes
+          protocol: "*"
+          destination_port_range: 30303
+          source_port_range: "*"
+          source_address_prefix: "*"
+          destination_address_prefix: Internet
+          access: Deny
+          priority: 100
+          direction: Outbound
+
+# Creating subnet for TX nodes
+  - name: Add TX subnet
+    azure_rm_subnet:
+      resource_group: '{{ rgname }}'
+      name: '{{ txSubnetName }}'
+      address_prefix: '{{ txSubnetPrefix }}'
+      virtual_network: '{{ virtualNetworkName }}'
+      security_group_name: '{{ txNsgName }}'
+
+# Creating subnets for MN nodes
+  - name: Add MN subnet
+    azure_rm_subnet:
+      resource_group: '{{ rgname }}'
+      name: '{{ namingInfix + "snet-mn" + item}}'
+      address_prefix: '{{ "10.0." + item + ".0/24" }}'
+      virtual_network: '{{ virtualNetworkName }}'
+      security_group_name: '{{ mnNsgName }}'
+    with_sequence: start=1 end='{{ numSubnets }}' format=%01x
+
+# Creating Availability Set
+  - name: Add Availability Set
+    azure_rm_availabilityset:
+      name: '{{ availabilitySetName }}'
+      resource_group: '{{ rgname }}'
+
+# Creating Load Balancer
+  - name: Add LoadBalancer using Azure RM Deployment
+    azure_rm_deployment:
+      resource_group_name: '{{ rgname }}'
+      location: '{{ location }}'
+      parameters:
+        loadBalancerName:
+          value: '{{ loadBalancerName }}'
+        dnsHostName:
+          value: '{{ dnsHostName }}'
+        loadBalancerBackendAddressPoolName:
+          value: '{{ loadBalancerBackendAddressPoolName }}'
+        loadBalancerInboundNatRuleNamePrefix:
+          value: '{{ loadBalancerInboundNatRuleNamePrefix }}'
+        frontendPort1:
+          value: '{{ httpPort }}'
+        backendPort1:
+          value: '{{ adminSitePort }}'
+        frontendPort2:
+          value: '{{ gethRPCPort }}'
+        backendPort2:
+          value: '{{ gethRPCPort }}'
+        numInboundNATRules:
+          value: '{{ numTXNodes }}'
+        inboundNATRuleFrontendStartingPort:
+          value: '{{ sshNATFrontEndStartingPort }}'
+        inboundNATRuleBackendPort:
+          value: '{{ sshPort }}'
+        location:
+          value: '{{ location }}'
+      template_link: 'https://traskethtemplates.blob.core.windows.net/template/loadBalancer.json'
+
+# Deploying TX nodes
+  - name: Deploy TX nodes
+    azure_rm_deployment:
+      resource_group_name: '{{ rgname }}'
+      location: '{{ location }}'
+      parameters:
+        loadBalancerName:
+          value: '{{ loadBalancerName }}'
+        loadBalancerBackendAddressPoolName:
+          value: '{{ loadBalancerBackendAddressPoolName }}'
+        loadBalancerInboundNatRuleNamePrefix:
+          value: '{{ loadBalancerInboundNatRuleNamePrefix }}'
+        virtualNetworkName:
+          value: '{{ virtualNetworkName }}'
+        txVMNamePrefix:
+          value: '{{ txVMNamePrefix }}'
+        numTXNodes:
+          value: '{{ numTXNodes }}'
+        txStorageAcctName:
+          value: '{{ txStorageAcctName }}'
+        txNIPrefix:
+          value: '{{ txNIPrefix }}'
+        storageAccountType:
+          value: '{{ txStorageAccountType }}'
+        availabilitySetName:
+          value: '{{ availabilitySetName }}'
+        txNodeVMSize:
+          value: '{{ txNodeVMSize }}'
+        adminUsername:
+          value: '{{ adminUsername }}'
+        adminSSHKey:
+          value: '{{ adminSSHKey }}'
+        txSubnetName:
+          value: '{{ txSubnetName }}'
+        ubuntuImage:
+          value: '{{ ubuntuImage }}'
+        namingInfix:
+          value: '{{ namingInfix }}'
+        location:
+          value: '{{ location }}'
+      template_link: 'https://traskethtemplates.blob.core.windows.net/template/txVMAuth-password.json'
+
+# Creating Storage Accounts for MN nodes
+  - name: Create Storage Accounts for MN nodes
+    azure_rm_storageaccount:
+      resource_group: '{{ rgname }}'
+      account_type: '{{ mnStorageAccountType }}'
+      name: '{{ namingInfix + "mn" + item }}'
+    with_sequence: start=1 end='{{ mnStorageAcctCount }}' format=%01x
+
+# Creating Network Interfaces for MN nodes
+  - name: Create Network Interfaces for MN nodes
+    azure_rm_networkinterface:
+      resource_group: '{{ rgname }}'
+      name: '{{ mnNICPrefix + item }}'
+      virtual_network_name: '{{ virtualNetworkName }}'
+      subnet_name: '{{ namingInfix + "snet-mn" + (((((item)|int / numMiningNodesPerMember)|int) + 1)|string) }}'
+      private_ip_allocation_method: Dynamic
+      security_group_name: '{{ mnNsgName }}'
+      public_ip: False
+    with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}' format=%01x
+
+# Deploying MN nodes
+  - name: Deploy MN nodes
+    azure_rm_virtualmachine:
+      resource_group: '{{ rgname }}'
+      image: '{{ ubuntuImage }}'
+      storage_account_name: '{{ namingInfix + "mn" + (((((item)|int / maxVMsPerStorageAcct)|int) + 1)|string) }}'
+      name: '{{ mnVMNamePrefix + item }}'
+      admin_username: '{{ adminUsername }}'
+      admin_password: '{{ adminPassword }}'
+      subnet_name: '{{ namingInfix + "snet-mn" + (((((item)|int / numConsortiumMembers)|int) + 1)|string) }}'
+      vm_size: '{{ mnNodeVMSize }}'
+      network_interface_names: '{{ mnNICPrefix + item }}'
+    with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}' format=%01x
+
+# Configuring TX nodes via VM Extensions
+  - name: Create TX nodes VM Extension
+    azure_rm_virtualmachine_extension:
+      name: newuserscript
+      resource_group: '{{ rgname }}'
+      virtual_machine_name: '{{ namingInfix + "-tx" + item }}'
+      publisher: Microsoft.Azure.Extensions
+      virtual_machine_extension_type: CustomScript
+      type_handler_version: 2.0
+      settings: '{"commandToExecute": "'/bin/bash configure-geth.sh' + '{{adminUsername}}' + '{{ethereumAccountPsswd}}' + '{{ethereumAccountPassphrase}}' + '{{artifactsLocationURL}}' + '{{ethereumNetworkID}}' + '{{maxPeers}}' + '{{mnNode}}' + '{{gethIPCPort}}' + '{{numConsortiumMembers}}' + '{{numMNNodes}}' + '{{mnVMNamePrefix}}' + '{{genesisBlock}}' + '{{item}}' "}'
+      auto_upgrade_minor_version: true
+    with_sequence: start=0 end='{{ (numTXNodes)|int - 1 }}' format=%01x
