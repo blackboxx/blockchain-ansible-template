@@ -254,7 +254,7 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
           value: '{{ namingInfix }}'
         location:
           value: '{{ location }}'
-      template_link: '{{ artifactsLocationURL + "txVMAuth-sshPublicKey.json"}}'
+      template_link: '{{ artifactsLocationURL + "txVMAuth-sshPublicKey.json" }}'
 
 # Creating Storage Accounts for MN nodes
   - name: Create Storage Accounts for MN nodes
