@@ -1,11 +1,19 @@
 - name: Create & configure Azure blockchain infrastructure
   hosts: localhost
   connection: local
+
+  vars_prompt:
+
+  - name: "ethereumAccountPsswd"
+    prompt: "Enter Ethereum Account Password"
+    private: yes
+
+  - name: "ethereumAccountPassphrase"
+    prompt: "Enter Ethereum Account Passphrase"
+    private: yes
+
   vars:
     subscription_id: 315e66d2-b933-43ae-9af1-e401260cff54
-    adminPassword: MojeSuperTajneHeslo22
-    ethereumAccountPsswd: '{{ adminPassword }}'
-    ethereumAccountPassphrase: '{{ adminPassword }}'
     adminSSHKey: "ssh-rsa
 AAAAB3NzaC1yc2EAAAABJQAAAQEAjzz6DGtXvAkWhgmqKpUx4kTyuQCmjStL1CB/
 L5ZFaLfEBUA52tY8jzWih8AojoGJFiQv+2mPyIKi1k7zKpsbWDtxbAkAeCKhb+Gv
