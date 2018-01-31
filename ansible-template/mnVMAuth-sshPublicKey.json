@@ -30,7 +30,7 @@
       "type": "string"
     },
     "index": {
-      "type": "int"
+      "type": "array"
     }
   },
   "variables": {
