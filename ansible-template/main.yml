@@ -30,7 +30,6 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
     location: westeurope
     numConsortiumMembers: 2
     numMiningNodesPerMember: 1
-    txStorageAccountType: Standard_LRS
     txNodeVMSize: Standard_A1_v2
     numTXNodes: 1
     mnStorageAccountType: Standard_LRS
@@ -50,7 +49,6 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
     mnStorageAcctCount: '{{ (((numMNNodes)|int / maxVMsPerStorageAcct)|int) + 1 }}'
     mnVMNamePrefix: '{{ namingInfix + "-mn" }}'
     mnNICPrefix: nic-mn
-    txStorageAcctName: '{{ namingInfix + "tx" }}'
     txVMNamePrefix: '{{ namingInfix + "-tx" }}'
     txSubnetName: '{{ namingInfix + "tx" }}'
     txSubnetPrefix: 10.0.0.0/24
@@ -233,12 +231,8 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
           value: '{{ txVMNamePrefix }}'
         numTXNodes:
           value: '{{ numTXNodes }}'
-        txStorageAcctName:
-          value: '{{ txStorageAcctName }}'
         txNIPrefix:
           value: '{{ txNIPrefix }}'
-        storageAccountType:
-          value: '{{ txStorageAccountType }}'
         availabilitySetName:
           value: '{{ availabilitySetName }}'
         txNodeVMSize:

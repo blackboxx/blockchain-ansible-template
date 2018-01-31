@@ -20,13 +20,7 @@
     "numTXNodes": {
       "type": "int"
     },
-    "txStorageAcctName": {
-      "type": "string"
-    },
     "txNIPrefix": {
-      "type": "string"
-    },
-    "storageAccountType": {
       "type": "string"
     },
     "availabilitySetName": {
