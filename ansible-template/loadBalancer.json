@@ -166,9 +166,7 @@
         "protocol": "Tcp",
         "frontendPort": "[copyIndex(parameters('inboundNATRuleFrontendStartingPort'))]",
         "backendPort": "[parameters('inboundNATRuleBackendPort')]",
-        "enableFloatingIP": false,
-        "mode":"Incremental"
-      }
+        "enableFloatingIP": false      }
     }
   ],
   "outputs": {
