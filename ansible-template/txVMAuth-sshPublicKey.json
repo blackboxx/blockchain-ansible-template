@@ -97,17 +97,6 @@
       }
     },
     {
-      "apiVersion": "2016-01-01",
-      "type": "Microsoft.Storage/storageAccounts",
-      "name": "[parameters('txStorageAcctName')]",
-      "location": "[parameters('location')]",
-      "sku": {
-        "name": "[parameters('storageAccountType')]"
-      },
-      "kind": "Storage",
-      "properties": {}
-    },
-    {
       "apiVersion": "2017-03-30",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat(parameters('txVMNamePrefix'), copyIndex())]",
@@ -145,7 +134,7 @@
           "imageReference": "[parameters('ubuntuImage')]",
           "osDisk": {
             "createOption": "FromImage",
-            "name": "[concat(parameters('namingInfix'), '-osdisk')]"
+            "name": "[concat(parameters('txVMNamePrefix'), copyIndex(), '-osdisk')]"
           }
         },
         "networkProfile": {
