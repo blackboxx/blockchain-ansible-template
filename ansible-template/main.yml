@@ -255,10 +255,10 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
       resource_group_name: '{{ rgname }}'
       location: '{{ location }}'
       parameters:
+        namingInfix:
+          value: '{{ namingInfix }}'
         mnVMNamePrefix:
           value: '{{ mnVMNamePrefix }}'
-        numMNNodes:
-          value: '{{ numMNNodes }}'
         mnNICPrefix:
           value: '{{ mnNICPrefix }}'
         numConsortiumMembers:
