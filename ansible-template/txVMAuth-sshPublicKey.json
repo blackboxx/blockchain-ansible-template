@@ -41,9 +41,6 @@
     "ubuntuImage": {
       "type": "object"
     },
-    "namingInfix": {
-      "type": "string"
-    },
     "location": {
       "type": "string"
     }

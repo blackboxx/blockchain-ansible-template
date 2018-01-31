@@ -251,36 +251,31 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
           value: '{{ location }}'
       template_link: '{{ artifactsLocationURL + "txVMAuth-sshPublicKey.json" }}'
 
-# Creating Storage Accounts for MN nodes
-  - name: Create Storage Accounts for MN nodes
-    azure_rm_storageaccount:
-      resource_group: '{{ rgname }}'
-      account_type: '{{ mnStorageAccountType }}'
-      name: '{{ namingInfix + "mn" + item }}'
-    with_sequence: start=1 end='{{ mnStorageAcctCount }}' format=%01x
-
-# Creating Network Interfaces for MN nodes
-  - name: Create Network Interfaces for MN nodes
-    azure_rm_networkinterface:
-      resource_group: '{{ rgname }}'
-      name: '{{ mnNICPrefix + item }}'
-      virtual_network_name: '{{ virtualNetworkName }}'
-      subnet_name: '{{ namingInfix + "snet-mn" + (((((item)|int / numMiningNodesPerMember)|int) + 1)|string) }}'
-      private_ip_allocation_method: Dynamic
-      security_group_name: '{{ mnNsgName }}'
-      public_ip: False
-    with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}' format=%01x
-
 # Deploying MN nodes
   - name: Deploy MN nodes
-    azure_rm_virtualmachine:
-      resource_group: '{{ rgname }}'
-      image: '{{ ubuntuImage }}'
-      storage_account_name: '{{ namingInfix + "mn" + (((((item)|int / maxVMsPerStorageAcct)|int) + 1)|string) }}'
-      name: '{{ mnVMNamePrefix + item }}'
-      admin_username: '{{ adminUsername }}'
-      admin_password: '{{ adminPassword }}'
-      subnet_name: '{{ namingInfix + "snet-mn" + (((((item)|int / numConsortiumMembers)|int) + 1)|string) }}'
-      vm_size: '{{ mnNodeVMSize }}'
-      network_interface_names: '{{ mnNICPrefix + item }}'
-    with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}' format=%01x
+    azure_rm_deployment:
+      resource_group_name: '{{ rgname }}'
+      location: '{{ location }}'
+      parameters:
+        mnVMNamePrefix:
+          value: '{{ mnVMNamePrefix }}'
+        numMNNodes:
+          value: '{{ numMNNodes }}'
+        mnNICPrefix:
+          value: '{{ mnNICPrefix }}'
+        numConsortiumMembers:
+          value: '{{ numConsortiumMembers }}'
+        mnNodeVMSize:
+          value: '{{ mnNodeVMSize }}'
+        adminUsername:
+          value: '{{ adminUsername }}'
+        adminSSHKey:
+          value: '{{ adminSSHKey }}'
+        ubuntuImage:
+          value: '{{ ubuntuImage }}'
+        location:
+          value: '{{ location }}'
+        index:
+          value: '{{ item }}'
+      template_link: '{{ artifactsLocationURL + "mnVMAuth-sshPublicKey.json" }}'
+      with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}' format=%01x
