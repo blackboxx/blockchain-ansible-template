@@ -245,8 +245,6 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
           value: '{{ txSubnetName }}'
         ubuntuImage:
           value: '{{ ubuntuImage }}'
-        namingInfix:
-          value: '{{ namingInfix }}'
         location:
           value: '{{ location }}'
       template_link: '{{ artifactsLocationURL + "txVMAuth-sshPublicKey.json" }}'
