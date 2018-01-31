@@ -181,6 +181,8 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
     azure_rm_availabilityset:
       name: '{{ availabilitySetName }}'
       resource_group: '{{ rgname }}'
+      sku: Aligned
+
 
 # Creating Load Balancer
   - name: Add LoadBalancer using Azure RM Deployment
