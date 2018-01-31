@@ -276,4 +276,4 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
         index:
           value: '{{ item }}'
       template_link: '{{ artifactsLocationURL + "mnVMAuth-sshPublicKey.json" }}'
-      with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}' format=%01x
+    with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}' format=%01x
