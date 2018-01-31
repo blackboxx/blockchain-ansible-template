@@ -150,6 +150,7 @@
       "type": "Microsoft.Network/loadBalancers/inboundNatRules",
       "name": "[concat(parameters('loadBalancerName'), '/', parameters('loadBalancerInboundNatRuleNamePrefix'), copyIndex())]",
       "location": "[parameters('location')]",
+      "mode": "Incremental"
       "copy": {
         "name": "lbNatLoop",
         "count": "[parameters('numInboundNATRules')]",
