@@ -48,7 +48,7 @@
   },
   "resources": [
     {
-      "apiVersion": "2017-11-01",
+      "apiVersion": "2016-09-01",
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('lbPublicIPAddressName')]",
       "location": "[parameters('location')]",
@@ -60,7 +60,7 @@
       }
     },
     {
-      "apiVersion": "2017-11-01",
+      "apiVersion": "2016-09-01",
       "name": "[parameters('loadBalancerName')]",
       "type": "Microsoft.Network/loadBalancers",
       "location": "[parameters('location')]",
@@ -146,11 +146,10 @@
       }
     },
     {
-      "apiVersion": "2017-11-01",
+      "apiVersion": "2016-09-01",
       "type": "Microsoft.Network/loadBalancers/inboundNatRules",
       "name": "[concat(parameters('loadBalancerName'), '/', parameters('loadBalancerInboundNatRuleNamePrefix'), copyIndex())]",
       "location": "[parameters('location')]",
-      "mode": "Incremental",
       "copy": {
         "name": "lbNatLoop",
         "count": "[parameters('numInboundNATRules')]",
