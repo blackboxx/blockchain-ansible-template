@@ -49,7 +49,7 @@
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "subnet": {
-                "id": "[concat(parameters('namingInfix'),'snet-mn',add(div(parameters('index'),parameters('numConsortiumMembers')),1))]"
+                  "id": "[concat(parameters('namingInfix'),'snet-mn','1')]"
               }
             }
           }
