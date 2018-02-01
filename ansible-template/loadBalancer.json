@@ -45,7 +45,7 @@
     "lbFrontEndIpConfigName": "LoadBalancerFrontEnd",
     "lbFrontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/',variables('lbFrontEndIpConfigName'))]",
     "lbBackendAddressPoolID": "[concat(variables('lbID'), '/backendAddressPools/', parameters('loadBalancerBackendAddressPoolName'))]"
-  },
+    },
   "resources": [
     {
       "apiVersion": "2016-09-01",
