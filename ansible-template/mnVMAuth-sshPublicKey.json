@@ -2,7 +2,7 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "namingInfix": {
+    "virtualNetworkName": {
       "type": "string"
     },
     "mnVMNamePrefix": {
@@ -11,7 +11,7 @@
     "mnNICPrefix": {
       "type": "string"
     },
-    "numConsortiumMembers": {
+    "namingInfix": {
       "type": "int"
     },
     "mnNodeVMSize": {
@@ -34,7 +34,9 @@
     }
   },
   "variables": {
-    "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]"
+    "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]",
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+    "mnSubnetName": "[concat(parameters('namingInfix'), 'snet-mn', parameters('index'))]"
   },
   "resources": [
     {
@@ -49,7 +51,7 @@
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "subnet": {
-                "id": "[concat(parameters('namingInfix'),'snet-mn',add(div(parameters('index'),parameters('numConsortiumMembers')),1))]"
+                "id": "[concat(variables('vnetID'),'/subnets/', variables('mnSubnetName'))]"
               }
             }
           }
