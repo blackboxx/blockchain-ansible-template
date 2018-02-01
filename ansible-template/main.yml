@@ -11,9 +11,10 @@
     private: yes
 
   tasks:
-  - include: infra.yml
+  - name: Create the infrastructure
+    include: infra.yml
     vars:
       - location: '{{ item }}'
-  with_items:
-    - westeurope
-    - eastus
+    with_items:
+      - westeurope
+      - eastus
