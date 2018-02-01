@@ -47,7 +47,7 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
       "version": "latest"
     }
 
-tasks:
+  tasks:
 
 # Generating unique string for public IP prefix
   - name: Generate UUID for public IP prefix 
