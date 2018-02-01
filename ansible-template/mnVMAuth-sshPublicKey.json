@@ -12,7 +12,7 @@
       "type": "string"
     },
     "namingInfix": {
-      "type": "int"
+      "type": "string"
     },
     "mnNodeVMSize": {
       "type": "string"
