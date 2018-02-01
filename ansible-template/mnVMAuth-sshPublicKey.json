@@ -31,12 +31,14 @@
     },
     "index": {
       "type": "string"
+    },
+    "mnSubnetName": {
+      "type": "string"
     }
   },
   "variables": {
     "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]",
-    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
-    "mnSubnetName": "[concat(parameters('namingInfix'), 'snet-mn', string(add(int(parameters('index')),1)))]"
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
   },
   "resources": [
     {
@@ -51,7 +53,7 @@
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "subnet": {
-                "id": "[concat(variables('vnetID'),'/subnets/', variables('mnSubnetName'))]"
+                "id": "[concat(variables('vnetID'),'/subnets/', parameters('mnSubnetName'))]"
               }
             }
           }
