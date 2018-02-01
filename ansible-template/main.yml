@@ -25,14 +25,11 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
     companyName: trask
     namingInfix: '{{ namePrefix + companyName }}'
     adminUsername: gethadmin
-    ethereumNetworkId: 72
-    maxPeers: 25
     location: westeurope
     numConsortiumMembers: 2
     numMiningNodesPerMember: 1
     txNodeVMSize: Standard_A1_v2
     numTXNodes: 1
-    mnStorageAccountType: Standard_LRS
     mnNodeVMSize: Standard_A1_v2
     availabilitySetName: AvSet
     httpPort: 80
@@ -40,19 +37,15 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
     sshPort: 22
     sshNATFrontEndStartingPort: 3000
     gethRPCPort: 8545
-    gethIPCPort: 30303
     loadBalancerInboundNatRuleNamePrefix: ssh-vm
     numMNNodes: '{{ (numConsortiumMembers * numMiningNodesPerMember) }}'
     loadBalancerName: '{{ namingInfix + "-lb" }}'
     loadBalancerBackendAddressPoolName: LoadBalancerBackend1
-    maxVMsPerStorageAcct: 20
-    mnStorageAcctCount: '{{ (((numMNNodes)|int / maxVMsPerStorageAcct)|int) + 1 }}'
     mnVMNamePrefix: '{{ namingInfix + "-mn" }}'
     mnNICPrefix: nic-mn
     txVMNamePrefix: '{{ namingInfix + "-tx" }}'
     txSubnetName: '{{ namingInfix + "tx" }}'
     txSubnetPrefix: 10.0.0.0/24
-    txSubnetRef: '{{ vnetID + "/subnets/" + txSubnetName }}'
     txNIPrefix: nic-tx
     virtualNetworkName: '{{ namingInfix + "vnet" }}'
     txNsgName: '{{ namingInfix + "TXNsg" }}'
@@ -60,23 +53,20 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
     addressPrefix: 10.0.0.0/20
     vnetID: '{{ "/subscriptions/" + subscription_id + "/resourceGroup/" + rgname + "/providers/Microsoft.Network/virtualNetworks" }}'
     numSubnets: '{{ numConsortiumMembers }}'
-    lbID: "[resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName'))]"
-    dnsHostName: sajdjdsfdskfj76
-    lbPublicIPAddressName: '{{ dnsHostName + "-publicip" }}'
-    lbFrontEndIpConfigName: LoadBalancerFrontEnd
-    lbFrontEndIPConfigID: '{{ lbID + "/frontendIPConfigurations/" + lbFrontEndIpConfigName }}'
-    lbBackendAddressPoolID: '{{ lbID + "/backendAddressPools/" + loadBalancerBackendAddressPoolName }}'
-    loadBalancerInboundNatRuleIDprefix: '{{ lbID + "/inboundNatRules/" + loadBalancerInboundNatRuleNamePrefix }}'
     ubuntuImage: {
       "publisher": "Canonical",
       "offer": "UbuntuServer",
       "sku": "16.04-LTS",
       "version": "latest"
     }
-    apiVersionStorageAccounts: "2016-01-01"
     genesisBlock: ""
 
   tasks:
+
+# Generating unique string for public IP
+  - name: generate a uuid for something 
+    local_action: shell uuidgen 
+    register: dnsHostName 
 
 # Creating Resource Group
   - name: Create resource group
