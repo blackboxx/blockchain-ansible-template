@@ -11,5 +11,9 @@
     private: yes
 
   tasks:
-  - include: dc1.yml
-  - include: dc2.yml
+  - include: infra.yml
+    vars:
+      - location: '{{ item }}'
+  with_items:
+    - westeurope
+    - eastus
