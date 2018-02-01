@@ -8,20 +8,20 @@ tasks:
 # Creating Resource Group
   - name: Create resource group
     azure_rm_resourcegroup:
-      name: '{{ rgname }}'
+      name: '{{ rgname1 }}'
       location: '{{ location1 }}'
 
 # Creating Virtual Network
   - name: Create virtual network
     azure_rm_virtualnetwork:
-      resource_group: '{{ rgname }}'
+      resource_group: '{{ rgname1 }}'
       name: '{{ virtualNetworkName }}'
       address_prefixes: '{{ addressPrefix }}'
 
 # Creating NSG for MN nodes
   - name: Create NSG for MN nodes
     azure_rm_securitygroup:
-      resource_group: '{{ rgname }}'
+      resource_group: '{{ rgname1 }}'
       name: '{{ mnNsgName }}'
       rules:
         - name: block-bootnodes
@@ -38,7 +38,7 @@ tasks:
 # Creating NSG for TX nodes
   - name: Create NSG for TX nodes
     azure_rm_securitygroup:
-      resource_group: '{{ rgname }}'
+      resource_group: '{{ rgname1 }}'
       name: '{{ txNsgName }}'
       rules:
         - name: allow-ssh
@@ -85,7 +85,7 @@ tasks:
 # Creating subnet for TX nodes
   - name: Add TX subnet
     azure_rm_subnet:
-      resource_group: '{{ rgname }}'
+      resource_group: '{{ rgname1 }}'
       name: '{{ txSubnetName }}'
       address_prefix: '{{ txSubnetPrefix }}'
       virtual_network: '{{ virtualNetworkName }}'
@@ -94,7 +94,7 @@ tasks:
 # Creating subnets for MN nodes
   - name: Add MN subnet
     azure_rm_subnet:
-      resource_group: '{{ rgname }}'
+      resource_group: '{{ rgname1 }}'
       name: '{{ namingInfix + "snet-mn" + item }}'
       address_prefix: '{{ "10.0." + item + ".0/24" }}'
       virtual_network: '{{ virtualNetworkName }}'
@@ -105,13 +105,13 @@ tasks:
   - name: Add Availability Set
     azure_rm_availabilityset:
       name: '{{ availabilitySetName }}'
-      resource_group: '{{ rgname }}'
+      resource_group: '{{ rgname1 }}'
       sku: Aligned
 
 # Creating Load Balancer
   - name: Add LoadBalancer for TX nodes
     azure_rm_deployment:
-      resource_group_name: '{{ rgname }}'
+      resource_group_name: '{{ rgname1 }}'
       location: '{{ location1 }}'
       parameters:
         loadBalancerName:
@@ -143,7 +143,7 @@ tasks:
 # Deploying TX nodes
   - name: Deploy TX nodes
     azure_rm_deployment:
-      resource_group_name: '{{ rgname }}'
+      resource_group_name: '{{ rgname1 }}'
       location: '{{ location1 }}'
       parameters:
         loadBalancerName:
@@ -180,7 +180,7 @@ tasks:
 # Deploying MN nodes
   - name: Deploy MN nodes
     azure_rm_deployment:
-      resource_group_name: '{{ rgname }}'
+      resource_group_name: '{{ rgname1 }}'
       location: '{{ location1 }}'
       parameters:
         virtualNetworkName:
