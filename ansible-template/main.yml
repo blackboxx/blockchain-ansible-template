@@ -10,9 +10,6 @@
     prompt: "Enter Ethereum Account Passphrase"
     private: yes
 
-  vars:
-    artifactsLocationURL: https://raw.githubusercontent.com/luberan/blockchain-ansible-template/master/ansible-template/
-
   tasks:
-  - include: '{{ artifactsLocationURL + "dc1.yml" }}'
-  - include: '{{ artifactsLocationURL + "dc2.yml" }}'
+  - include: dc1.yml
+  - include: dc2.yml
