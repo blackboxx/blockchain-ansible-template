@@ -29,21 +29,20 @@
     "location": {
       "type": "string"
     },
-    "item": {
+    "index": {
       "type": "string"
     }
   },
   "variables": {
-    "index": "[int(parameters('item'))]",
     "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
-    "mnSubnetName": "[concat(parameters('namingInfix'), 'snet-mn', string(add(variables('index'),1)))]"
+    "mnSubnetName": "[concat(parameters('namingInfix'), 'snet-mn', string(add(int(parameters('index')),1)))]"
   },
   "resources": [
     {
       "apiVersion": "2016-09-01",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(parameters('mnNICPrefix'), variables('index'))]",
+      "name": "[concat(parameters('mnNICPrefix'), parameters('index'))]",
       "location": "[parameters('location')]",
       "properties": {
         "ipConfigurations": [
@@ -62,17 +61,17 @@
     {
       "apiVersion": "2017-03-30",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(parameters('mnVMNamePrefix'), variables('index'))]",
+      "name": "[concat(parameters('mnVMNamePrefix'), parameters('index'))]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', parameters('mnNICPrefix'), variables('index'))]"
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('mnNICPrefix'), parameters('index'))]"
       ],
       "properties": {
         "hardwareProfile": {
           "vmSize": "[parameters('mnNodeVMSize')]"
         },
         "osProfile": {
-          "computerName": "[concat(parameters('mnVMNamePrefix'), variables('index'))]",
+          "computerName": "[concat(parameters('mnVMNamePrefix'), parameters('index'))]",
           "adminUsername": "[parameters('adminUsername')]",
           "linuxConfiguration": {
             "disablePasswordAuthentication": true,
@@ -90,13 +89,13 @@
           "imageReference": "[parameters('ubuntuImage')]",
           "osDisk": {
             "createOption": "FromImage",
-            "name": "[concat(parameters('mnVMNamePrefix'), variables('index'), '-osdisk')]"
+            "name": "[concat(parameters('mnVMNamePrefix'), parameters('index'), '-osdisk')]"
           }
         },
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('mnNICPrefix'), variables('index')))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('mnNICPrefix'), parameters('index')))]"
             }
           ]
         }
