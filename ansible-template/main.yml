@@ -92,7 +92,7 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
       address_prefixes: '{{ addressPrefix }}'
 
 # Creating NSG for MN nodes
-  - name: Create NSG for mining nodes
+  - name: Create NSG for MN nodes
     azure_rm_securitygroup:
       resource_group: '{{ rgname }}'
       name: '{{ mnNsgName }}'
@@ -109,7 +109,7 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
           direction: Outbound
 
 # Creating NSG for TX nodes
-  - name: Create NSG for transaction nodes
+  - name: Create NSG for TX nodes
     azure_rm_securitygroup:
       resource_group: '{{ rgname }}'
       name: '{{ txNsgName }}'
@@ -182,7 +182,7 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
       sku: Aligned
 
 # Creating Load Balancer
-  - name: Add LoadBalancer using Azure RM Deployment
+  - name: Add LoadBalancer for TX nodes
     azure_rm_deployment:
       resource_group_name: '{{ rgname }}'
       location: '{{ location }}'
