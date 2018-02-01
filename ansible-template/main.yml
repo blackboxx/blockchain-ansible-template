@@ -161,7 +161,7 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
       address_prefix: '{{ "10.0." + item + ".0/24" }}'
       virtual_network: '{{ virtualNetworkName }}'
       security_group_name: '{{ mnNsgName }}'
-    with_sequence: start=1 end='{{ numSubnets }}' format=%02x
+    with_sequence: start=1 end='{{ numSubnets }}'
 
 # Creating Availability Set
   - name: Add Availability Set
@@ -237,7 +237,7 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
         index:
           value: '{{ item }}'
       template_link: '{{ artifactsLocationURL + "txVMAuth-sshPublicKey.json" }}'
-    with_sequence: start=0 end='{{ (numTXNodes)|int - 1 }}' format=%02x
+    with_sequence: start=0 end='{{ (numTXNodes)|int - 1 }}'
 
 # Deploying MN nodes
   - name: Deploy MN nodes
@@ -268,4 +268,4 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
         mnSubnetName:
           value: '{{ namingInfix + "snet-mn" + ((((item)|int / numMiningNodesPerMember)|int + 1)|string) }}'
       template_link: '{{ artifactsLocationURL + "mnVMAuth-sshPublicKey.json" }}'
-    with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}' format=%02x
+    with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}'
