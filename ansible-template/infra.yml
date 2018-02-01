@@ -1,7 +1,3 @@
-- name: Create & configure Azure blockchain infrastructure
-  hosts: localhost
-  connection: local
-
   vars:    
     subscription_id: 315e66d2-b933-43ae-9af1-e401260cff54
     adminSSHKey: "ssh-rsa
