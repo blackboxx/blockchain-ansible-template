@@ -1,5 +1,3 @@
-tasks:
-
 # Generating unique string for public IP prefix
   - name: Generate UUID for public IP prefix 
     local_action: shell uuidgen 
