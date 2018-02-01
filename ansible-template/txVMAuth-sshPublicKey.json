@@ -17,9 +17,6 @@
     "txVMNamePrefix": {
       "type": "string"
     },
-    "numTXNodes": {
-      "type": "int"
-    },
     "txNIPrefix": {
       "type": "string"
     },
@@ -43,6 +40,9 @@
     },
     "location": {
       "type": "string"
+    },
+    "index": {
+      "type": "string"
     }
   },
   "variables": {
@@ -50,19 +50,14 @@
     "loadBalancerID": "[resourceId('Microsoft.Network/loadBalancers', parameters('loadBalancerName'))]",
     "loadBalancerBackendAddressPoolID": "[concat(variables('loadBalancerID'), '/backendAddressPools/', parameters('loadBalancerBackendAddressPoolName'))]",
     "loadBalancerInboundNatRuleIDprefix": "[concat(variables('loadBalancerID'),'/inboundNatRules/',parameters('loadBalancerInboundNatRuleNamePrefix'))]",
-    "txSubnetRef": "[concat(variables('vnetID'),'/subnets/', parameters('txSubnetName'))]",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]"
   },
   "resources": [
     {
       "apiVersion": "2016-09-01",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(parameters('txNIPrefix'), copyindex())]",
+      "name": "[concat(parameters('txNIPrefix'), parameters('index'))]",
       "location": "[parameters('location')]",
-      "copy": {
-        "name": "txNicLoop",
-        "count": "[parameters('numTXNodes')]"
-      },
       "properties": {
         "ipConfigurations": [
           {
@@ -70,7 +65,7 @@
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "subnet": {
-                "id": "[variables('txSubnetRef')]"
+                "id": "[concat(variables('vnetID'),'/subnets/', parameters('txSubnetName'))]"
               },
               "loadBalancerBackendAddressPools": [
                 {
@@ -79,7 +74,7 @@
               ],
               "loadBalancerInboundNatRules": [
                 {
-                  "id": "[concat(variables('loadBalancerInboundNatRuleIDprefix'), copyindex())]"
+                  "id": "[concat(variables('loadBalancerInboundNatRuleIDprefix'), parameters('index'))]"
                 }
               ]
             }
@@ -90,14 +85,10 @@
     {
       "apiVersion": "2017-03-30",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(parameters('txVMNamePrefix'), copyIndex())]",
+      "name": "[concat(parameters('txVMNamePrefix'), parameters('index'))]",
       "location": "[parameters('location')]",
-      "copy": {
-        "name": "txVMLoop",
-        "count": "[parameters('numTXNodes')]"
-      },
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', parameters('txNIPrefix'), copyIndex())]"
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('txNIPrefix'), parameters('index'))]"
       ],
       "properties": {
         "availabilitySet": {
@@ -107,7 +98,7 @@
           "vmSize": "[parameters('txNodeVMSize')]"
         },
         "osProfile": {
-          "computerName": "[concat(parameters('txVMNamePrefix'), copyIndex())]",
+          "computerName": "[concat(parameters('txVMNamePrefix'), parameters('index'))]",
           "adminUsername": "[parameters('adminUsername')]",
           "linuxConfiguration": {
             "disablePasswordAuthentication": true,
@@ -125,13 +116,13 @@
           "imageReference": "[parameters('ubuntuImage')]",
           "osDisk": {
             "createOption": "FromImage",
-            "name": "[concat(parameters('txVMNamePrefix'), copyIndex(), '-osdisk')]"
+            "name": "[concat(parameters('txVMNamePrefix'), parameters('index'), '-osdisk')]"
           }
         },
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('txNIPrefix'), copyindex()))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('txNIPrefix'), parameters('index')))]"
             }
           ]
         }

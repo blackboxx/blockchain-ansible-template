@@ -229,8 +229,6 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
           value: '{{ virtualNetworkName }}'
         txVMNamePrefix:
           value: '{{ txVMNamePrefix }}'
-        numTXNodes:
-          value: '{{ numTXNodes }}'
         txNIPrefix:
           value: '{{ txNIPrefix }}'
         availabilitySetName:
@@ -247,7 +245,10 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
           value: '{{ ubuntuImage }}'
         location:
           value: '{{ location }}'
+        index:
+          value: '{{ item }}'
       template_link: '{{ artifactsLocationURL + "txVMAuth-sshPublicKey.json" }}'
+    with_sequence: start=0 end='{{ (numTXNodes)|int - 1 }}' format=%01x
 
 # Deploying MN nodes
   - name: Deploy MN nodes
