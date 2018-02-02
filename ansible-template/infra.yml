@@ -115,7 +115,7 @@
         loadBalancerName:
           value: '{{ loadBalancerName }}'
         dnsHostName:
-          value: '{{ dnsHostName.stdout.split("-")[0] + namingInfix }}'
+          value: '{{ namingInfix + dnsHostName.stdout.split("-")[0] }}'
         loadBalancerBackendAddressPoolName:
           value: '{{ loadBalancerBackendAddressPoolName }}'
         loadBalancerInboundNatRuleNamePrefix:
