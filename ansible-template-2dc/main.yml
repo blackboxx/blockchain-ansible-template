@@ -13,7 +13,7 @@
   tasks:
     - include_tasks: infra.yml
       vars:
-        location: '{{ loc }}'
+        location: '{{ loc.dc }}'
         fileLocation: https://raw.githubusercontent.com/luberan/blockchain-ansible-template/master/ansible-template-2dc/
         subscription_id: 315e66d2-b933-43ae-9af1-e401260cff54
         adminSSHKey: "ssh-rsa
@@ -23,7 +23,7 @@ on3ITNSSV17900qBySgrNpf35s/yKH7lVuMyVAU7GSrBMxEZwvG8L6w3uoacsATp
 AxMALyWBEzmySIm9iTM/6ks3Q7Ru4HWXLrfupVHfkZqwqhK1yywbZ+EcDTw4AO0N
 GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
 77MZ1MuBLfqP6qHDuRDQ1Du9k9Jw/BeYQ5+XB+RwWZyPM7Q1UQ=="
-        rgname: '{{ namePrefix + "-" + loc }}'
+        rgname: '{{ namePrefix + "-" + loc.dc }}'
         namePrefix: eth
         companyName: trask
         namingInfix: '{{ namePrefix + companyName }}'
@@ -52,7 +52,9 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
         virtualNetworkName: '{{ namingInfix + "vnet" }}'
         txNsgName: '{{ namingInfix + "TXNsg" }}'
         mnNsgName: '{{ namingInfix + "MNNsg" }}'
-        addressPrefix: 10.0.0.0/20
+        addressPrefix: '{{ loc.netAddressPrefix }}'
+        netNum: '{{ loc.net }}'
+        txSubnetNum: '{{ loc.txSubnet }}'
         vnetID: '{{ "/subscriptions/" + subscription_id + "/resourceGroup/" + rg + "/providers/Microsoft.Network/virtualNetworks" }}'
         numSubnets: '{{ numConsortiumMembers }}'
         ubuntuImage: {
@@ -62,7 +64,7 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
           "version": "latest"
         }
       with_items:
-        - westeurope
-        - eastus
+        - { dc: 'westeurope', netAddressPrefix: '10.0.0.0/16', txSubnet: '10.0.0.0/24', net: 0 }
+        - { dc: 'eastus', netAddressPrefix: '10.1.0.0/16', txSubnet: '10.1.0.0/24', net: 1 }
       loop_control:
         loop_var: loc
