@@ -136,7 +136,7 @@
           value: '{{ sshPort }}'
         location:
           value: '{{ location }}'
-      template_link: loadBalancer.json
+      template_link: '{{ fileLocation + "loadBalancer.json" }}'
 
 # Deploying TX nodes
   - name: Deploy TX nodes
@@ -172,7 +172,7 @@
           value: '{{ location }}'
         index:
           value: '{{ item }}'
-      template_link: txVMAuth-sshPublicKey.json
+      template_link: '{{ fileLocation + "txVMAuth-sshPublicKey.json" }}'
     with_sequence: start=0 end='{{ (numTXNodes)|int - 1 }}'
 
 # Deploying MN nodes
@@ -203,5 +203,5 @@
           value: '{{ item }}'
         mnSubnetName:
           value: '{{ namingInfix + "snet-mn" + ((((item)|int / numMiningNodesPerMember)|int + 1)|string) }}'
-      template_link: mnVMAuth-sshPublicKey.json
+      template_link: '{{ fileLocation + "mnVMAuth-sshPublicKey.json" }}'
     with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}'

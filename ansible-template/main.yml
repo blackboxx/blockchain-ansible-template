@@ -14,6 +14,7 @@
     - include_tasks: infra.yml
       vars:
         location: '{{ loc }}'
+        fileLocation: https://raw.githubusercontent.com/luberan/blockchain-ansible-template/master/ansible-template/
         subscription_id: 315e66d2-b933-43ae-9af1-e401260cff54
         adminSSHKey: "ssh-rsa
 AAAAB3NzaC1yc2EAAAABJQAAAQEAjzz6DGtXvAkWhgmqKpUx4kTyuQCmjStL1CB/
