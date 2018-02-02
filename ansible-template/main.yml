@@ -20,7 +20,7 @@ AxMALyWBEzmySIm9iTM/6ks3Q7Ru4HWXLrfupVHfkZqwqhK1yywbZ+EcDTw4AO0N
 GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
 77MZ1MuBLfqP6qHDuRDQ1Du9k9Jw/BeYQ5+XB+RwWZyPM7Q1UQ=="
     artifactsLocationURL: https://raw.githubusercontent.com/luberan/blockchain-ansible-template/master/ansible-template/
-    rgname: testo
+    rg: testo
     namePrefix: eth
     companyName: trask
     namingInfix: '{{ namePrefix + companyName }}'
@@ -50,7 +50,7 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
     txNsgName: '{{ namingInfix + "TXNsg" }}'
     mnNsgName: '{{ namingInfix + "MNNsg" }}'
     addressPrefix: 10.0.0.0/20
-#    vnetID: '{{ "/subscriptions/" + subscription_id + "/resourceGroup/" + rgname + "/providers/Microsoft.Network/virtualNetworks" }}'
+    vnetID: '{{ "/subscriptions/" + subscription_id + "/resourceGroup/" + rg + "/providers/Microsoft.Network/virtualNetworks" }}'
     numSubnets: '{{ numConsortiumMembers }}'
     ubuntuImage: {
       "publisher": "Canonical",
@@ -65,7 +65,7 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
         location: '{{ item }}'
         adminSSHKey: '{{ adminSSHKey }}'
         artifactsLocationURL: '{{ artifactsLocationURL }}'
-        rgname: '{{ rgname }}'
+        rgname: '{{ rg }}'
         namePrefix: '{{ namePrefix }}'
         companyName: '{{ companyName }}'
         namingInfix: '{{ namingInfix }}'
