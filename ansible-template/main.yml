@@ -13,7 +13,7 @@
   tasks:
     - include_tasks: infra.yml
       vars:
-        location: '{{ item }}'
+        location: '{{ loc }}'
         subscription_id: 315e66d2-b933-43ae-9af1-e401260cff54
         adminSSHKey: "ssh-rsa
 AAAAB3NzaC1yc2EAAAABJQAAAQEAjzz6DGtXvAkWhgmqKpUx4kTyuQCmjStL1CB/
@@ -22,7 +22,7 @@ on3ITNSSV17900qBySgrNpf35s/yKH7lVuMyVAU7GSrBMxEZwvG8L6w3uoacsATp
 AxMALyWBEzmySIm9iTM/6ks3Q7Ru4HWXLrfupVHfkZqwqhK1yywbZ+EcDTw4AO0N
 GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
 77MZ1MuBLfqP6qHDuRDQ1Du9k9Jw/BeYQ5+XB+RwWZyPM7Q1UQ=="
-        rgname: '{{ namePrefix + item }}'
+        rgname: '{{ namePrefix + "-" + loc }}'
         namePrefix: eth
         companyName: trask
         namingInfix: '{{ namePrefix + companyName }}'
@@ -63,3 +63,5 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
       with_items:
         - westeurope
         - eastus
+      loop_control:
+        loop_var: loc
