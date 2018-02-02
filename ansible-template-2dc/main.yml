@@ -47,14 +47,13 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
         mnNICPrefix: nic-mn
         txVMNamePrefix: '{{ namingInfix + "-tx" }}'
         txSubnetName: '{{ namingInfix + "tx" }}'
-        txSubnetPrefix: 10.0.0.0/24
+        txSubnetPrefix: '{{ loc.txSubnet }}'
         txNIPrefix: nic-tx
         virtualNetworkName: '{{ namingInfix + "vnet" }}'
         txNsgName: '{{ namingInfix + "TXNsg" }}'
         mnNsgName: '{{ namingInfix + "MNNsg" }}'
         addressPrefix: '{{ loc.netAddressPrefix }}'
         netNum: '{{ loc.net }}'
-        txSubnetNum: '{{ loc.txSubnet }}'
         vnetID: '{{ "/subscriptions/" + subscription_id + "/resourceGroup/" + rg + "/providers/Microsoft.Network/virtualNetworks" }}'
         numSubnets: '{{ numConsortiumMembers }}'
         ubuntuImage: {
