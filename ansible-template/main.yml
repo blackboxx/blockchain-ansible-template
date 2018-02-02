@@ -98,7 +98,8 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
       addressPrefix: '{{ addressPrefix }}'
       vnetID: '{{ vnetID }}'
       numSubnets: '{{ numSubnets }}'
-      ubuntuImage: '{{ ubuntuImage }}'  
+      ubuntuImage: '{{ ubuntuImage }}'
+
     with_items:
       - westeurope
       - eastus
