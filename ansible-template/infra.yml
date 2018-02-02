@@ -6,20 +6,20 @@
 # Creating Resource Group
   - name: Create resource group
     azure_rm_resourcegroup:
-      name: '{{ rgname1 }}'
-      location: '{{ location1 }}'
+      name: '{{ rgname }}'
+      location: '{{ location }}'
 
 # Creating Virtual Network
   - name: Create virtual network
     azure_rm_virtualnetwork:
-      resource_group: '{{ rgname1 }}'
+      resource_group: '{{ rgname }}'
       name: '{{ virtualNetworkName }}'
       address_prefixes: '{{ addressPrefix }}'
 
 # Creating NSG for MN nodes
   - name: Create NSG for MN nodes
     azure_rm_securitygroup:
-      resource_group: '{{ rgname1 }}'
+      resource_group: '{{ rgname }}'
       name: '{{ mnNsgName }}'
       rules:
         - name: block-bootnodes
@@ -36,7 +36,7 @@
 # Creating NSG for TX nodes
   - name: Create NSG for TX nodes
     azure_rm_securitygroup:
-      resource_group: '{{ rgname1 }}'
+      resource_group: '{{ rgname }}'
       name: '{{ txNsgName }}'
       rules:
         - name: allow-ssh
@@ -83,7 +83,7 @@
 # Creating subnet for TX nodes
   - name: Add TX subnet
     azure_rm_subnet:
-      resource_group: '{{ rgname1 }}'
+      resource_group: '{{ rgname }}'
       name: '{{ txSubnetName }}'
       address_prefix: '{{ txSubnetPrefix }}'
       virtual_network: '{{ virtualNetworkName }}'
@@ -92,7 +92,7 @@
 # Creating subnets for MN nodes
   - name: Add MN subnet
     azure_rm_subnet:
-      resource_group: '{{ rgname1 }}'
+      resource_group: '{{ rgname }}'
       name: '{{ namingInfix + "snet-mn" + item }}'
       address_prefix: '{{ "10.0." + item + ".0/24" }}'
       virtual_network: '{{ virtualNetworkName }}'
@@ -103,14 +103,14 @@
   - name: Add Availability Set
     azure_rm_availabilityset:
       name: '{{ availabilitySetName }}'
-      resource_group: '{{ rgname1 }}'
+      resource_group: '{{ rgname }}'
       sku: Aligned
 
 # Creating Load Balancer
   - name: Add LoadBalancer for TX nodes
     azure_rm_deployment:
-      resource_group_name: '{{ rgname1 }}'
-      location: '{{ location1 }}'
+      resource_group_name: '{{ rgname }}'
+      location: '{{ location }}'
       parameters:
         loadBalancerName:
           value: '{{ loadBalancerName }}'
@@ -135,14 +135,14 @@
         inboundNATRuleBackendPort:
           value: '{{ sshPort }}'
         location:
-          value: '{{ location1 }}'
+          value: '{{ location }}'
       template_link: '{{ artifactsLocationURL + "loadBalancer.json"}}'
 
 # Deploying TX nodes
   - name: Deploy TX nodes
     azure_rm_deployment:
-      resource_group_name: '{{ rgname1 }}'
-      location: '{{ location1 }}'
+      resource_group_name: '{{ rgname }}'
+      location: '{{ location }}'
       parameters:
         loadBalancerName:
           value: '{{ loadBalancerName }}'
@@ -169,7 +169,7 @@
         ubuntuImage:
           value: '{{ ubuntuImage }}'
         location:
-          value: '{{ location1 }}'
+          value: '{{ location }}'
         index:
           value: '{{ item }}'
       template_link: '{{ artifactsLocationURL + "txVMAuth-sshPublicKey.json" }}'
@@ -178,8 +178,8 @@
 # Deploying MN nodes
   - name: Deploy MN nodes
     azure_rm_deployment:
-      resource_group_name: '{{ rgname1 }}'
-      location: '{{ location1 }}'
+      resource_group_name: '{{ rgname }}'
+      location: '{{ location }}'
       parameters:
         virtualNetworkName:
           value: '{{ virtualNetworkName }}'
@@ -198,7 +198,7 @@
         ubuntuImage:
           value: '{{ ubuntuImage }}'
         location:
-          value: '{{ location1 }}'
+          value: '{{ location }}'
         index:
           value: '{{ item }}'
         mnSubnetName:
