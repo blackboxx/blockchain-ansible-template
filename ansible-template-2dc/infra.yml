@@ -205,3 +205,21 @@
           value: '{{ namingInfix + "snet-mn" + ((((item)|int / numMiningNodesPerMember)|int + 1)|string) }}'
       template_link: '{{ fileLocation + "mnVMAuth-sshPublicKey.json" }}'
     with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}'
+
+# Creating VNETs for connection between datacenters
+  - name: Add VNETs for connection between datacenters
+    azure_rm_deployment:
+      resource_group_name: '{{ rgname }}'
+      location: '{{ location }}'
+      parameters:
+        location:
+          value: '{{ location }}'
+        virtualNetworkName:
+          value: '{{ virtualNetworkName }}'
+        addressPrefix:
+          value: '{{ addressPrefix }}'
+        subnetName:
+          value: '{{ location }}'
+        subnetPrefix:
+          value: '{{ subnetPrefix }}'
+      template_link: '{{ fileLocation + "loadBalancer.json" }}'
