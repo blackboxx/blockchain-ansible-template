@@ -12,7 +12,7 @@
 
   vars:
     location: westeurope
-    fileLocation: https://raw.githubusercontent.com/luberan/blockchain-ansible-template/master/ansible-template/
+    fileLocation: https://raw.githubusercontent.com/luberan/blockchain-ansible-template/master/ansible-template-1dc/
     subscription_id: 315e66d2-b933-43ae-9af1-e401260cff54
     adminSSHKey: "ssh-rsa
 AAAAB3NzaC1yc2EAAAABJQAAAQEAjzz6DGtXvAkWhgmqKpUx4kTyuQCmjStL1CB/
@@ -61,7 +61,7 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
     }
 
   tasks:
-  
+
 # Generating unique string for public IP prefix
   - name: Generate UUID for public IP prefix 
     local_action: shell uuidgen 
