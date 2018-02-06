@@ -87,6 +87,9 @@
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat(parameters('txVMNamePrefix'), parameters('index'))]",
       "location": "[parameters('location')]",
+      "tags": {
+        "node": "tx"
+      },
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', parameters('txNIPrefix'), parameters('index'))]"
       ],

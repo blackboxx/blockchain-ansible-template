@@ -251,8 +251,6 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
           value: '{{ mnVMNamePrefix }}'
         mnNICPrefix:
           value: '{{ mnNICPrefix }}'
-        namingInfix:
-          value: '{{ namingInfix }}'
         mnNodeVMSize:
           value: '{{ mnNodeVMSize }}'
         adminUsername:
