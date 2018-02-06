@@ -14,13 +14,15 @@
     location: westeurope
     fileLocation: https://raw.githubusercontent.com/luberan/blockchain-ansible-template/master/ansible-template-1dc/
     subscription_id: 315e66d2-b933-43ae-9af1-e401260cff54
-    adminSSHKey: "ssh-rsa
+    adminSSHKey: "---- BEGIN SSH2 PUBLIC KEY ----
+Comment: "rsa-key-20180130"
 AAAAB3NzaC1yc2EAAAABJQAAAQEAjzz6DGtXvAkWhgmqKpUx4kTyuQCmjStL1CB/
 L5ZFaLfEBUA52tY8jzWih8AojoGJFiQv+2mPyIKi1k7zKpsbWDtxbAkAeCKhb+Gv
 on3ITNSSV17900qBySgrNpf35s/yKH7lVuMyVAU7GSrBMxEZwvG8L6w3uoacsATp
 AxMALyWBEzmySIm9iTM/6ks3Q7Ru4HWXLrfupVHfkZqwqhK1yywbZ+EcDTw4AO0N
 GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
-77MZ1MuBLfqP6qHDuRDQ1Du9k9Jw/BeYQ5+XB+RwWZyPM7Q1UQ=="
+77MZ1MuBLfqP6qHDuRDQ1Du9k9Jw/BeYQ5+XB+RwWZyPM7Q1UQ==
+---- END SSH2 PUBLIC KEY ----"
     rgname: '{{ namePrefix + "-" + location }}'
     namePrefix: eth
     companyName: trask
