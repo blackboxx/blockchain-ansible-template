@@ -62,7 +62,7 @@
         "autoUpgradeMinorVersion": true,
         "settings": {
           "fileUris": [
-            "[concat(parameters('fileLocation'), '/scripts/configure-geth.sh')]"
+            "[concat(parameters('fileLocation'), '/configure-geth.sh')]"
           ]
         },
         "protectedSettings": {

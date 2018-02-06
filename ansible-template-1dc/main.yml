@@ -244,7 +244,7 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
     with_sequence: start=0 end='{{ numTXNodes - 1 }}'
 
 # Configuring TX nodes
-  - name:
+  - name: Configure TX nodes
     azure_rm_deployment:
       resource_group_name: '{{ rgname }}'
       location: '{{ location }}'

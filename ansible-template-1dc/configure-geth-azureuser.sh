@@ -169,7 +169,7 @@ GASLIMIT=`cat "$GENESIS_FILE_PATH" | jq '.gasLimit'`;
 echo "===== Completed genesis file and pre-allocated account creation =====";
 
 cd $HOMEDIR
-wget -N ${ARTIFACTS_URL_PREFIX}/scripts/start-private-blockchain.sh || unsuccessful_exit "failed to download start-private-blockchain.sh" 16;
+wget -N ${ARTIFACTS_URL_PREFIX}/start-private-blockchain.sh || unsuccessful_exit "failed to download start-private-blockchain.sh" 16;
 
 ####################
 # Initialize geth for private network
@@ -198,18 +198,18 @@ if [ $NODE_TYPE -eq 0 ]; then # TX nodes only
 	echo "===== Starting admin website setup =====";
 	mkdir -p $ETHERADMIN_HOME/views/layouts;
 	cd $ETHERADMIN_HOME/views/layouts;
-	wget -N ${ARTIFACTS_URL_PREFIX}/scripts/etheradmin/main.handlebars || unsuccessful_exit "failed to download main.handlebars" 18;
+	wget -N ${ARTIFACTS_URL_PREFIX}/etheradmin/main.handlebars || unsuccessful_exit "failed to download main.handlebars" 18;
 	cd $ETHERADMIN_HOME/views;
-	wget -N ${ARTIFACTS_URL_PREFIX}/scripts/etheradmin/etheradmin.handlebars || unsuccessful_exit "failed to download etheradmin.handlebars" 19;
-	wget -N ${ARTIFACTS_URL_PREFIX}/scripts/etheradmin/etherstartup.handlebars || unsuccessful_exit "failed to download etherstartup.handlebars" 20;
+	wget -N ${ARTIFACTS_URL_PREFIX}/etheradmin/etheradmin.handlebars || unsuccessful_exit "failed to download etheradmin.handlebars" 19;
+	wget -N ${ARTIFACTS_URL_PREFIX}/etheradmin/etherstartup.handlebars || unsuccessful_exit "failed to download etherstartup.handlebars" 20;
 	cd $ETHERADMIN_HOME;
-	wget -N ${ARTIFACTS_URL_PREFIX}/scripts/etheradmin/package.json || unsuccessful_exit "failed to download package.json" 21;
-	wget -N ${ARTIFACTS_URL_PREFIX}/scripts/etheradmin/npm-shrinkwrap.json || unsuccessful_exit "failed to download npm-shrinkwrap.json" 22;
+	wget -N ${ARTIFACTS_URL_PREFIX}/etheradmin/package.json || unsuccessful_exit "failed to download package.json" 21;
+	wget -N ${ARTIFACTS_URL_PREFIX}/etheradmin/npm-shrinkwrap.json || unsuccessful_exit "failed to download npm-shrinkwrap.json" 22;
 	npm install || unsuccessful_exit "failed while running npm install" 23;
-	wget -N ${ARTIFACTS_URL_PREFIX}/scripts/etheradmin/app.js || unsuccessful_exit "failed to download app.js" 24;
+	wget -N ${ARTIFACTS_URL_PREFIX}/etheradmin/app.js || unsuccessful_exit "failed to download app.js" 24;
 	mkdir $ETHERADMIN_HOME/public;
 	cd $ETHERADMIN_HOME/public;
-	wget -N ${ARTIFACTS_URL_PREFIX}/scripts/etheradmin/skeleton.css || unsuccessful_exit "failed to download skeleton.css" 25;
+	wget -N ${ARTIFACTS_URL_PREFIX}/etheradmin/skeleton.css || unsuccessful_exit "failed to download skeleton.css" 25;
 	echo "===== Completed admin website setup =====";
 fi
 
