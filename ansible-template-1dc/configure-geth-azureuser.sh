@@ -57,8 +57,9 @@ DIFFICULTY=`printf "0x%X" $(($DIFFICULTY_CONSTANT * $NUM_MN_NODES))`;
 # Update modules
 ################
 echo "===== Starting packages update =====";
-sudo apt-get -y update || unsuccessful_exit "Error starting packages update
-" 29;
+sudo apt -y update || unsuccessful_exit "Error starting packages update" 29;
+sudo apt -y upgrade
+sudo apt -y full-upgrade
 echo "===== Completed packages update =====";
 # To avoid intermittent issues with package DB staying locked when next apt-get runs
 sleep 5;
@@ -67,7 +68,7 @@ sleep 5;
 # Install packages
 ##################
 echo "===== Starting packages installation =====";
-sudo apt-get -y install npm=3.5.2-0ubuntu4 git=1:2.7.4-0ubuntu1 jq=1.5+dfsg-1 || unsuccessful_exit "package install 1 failed" 32;
+sudo apt -y install npm git jq || unsuccessful_exit "package install 1 failed" 32;
 sudo update-alternatives --install /usr/bin/node nodejs /usr/bin/nodejs 100 || unsuccessful_exit "package install 2 failed" 2;
 echo "===== Completed packages installation =====";
 
@@ -75,10 +76,8 @@ echo "===== Completed packages installation =====";
 # Install geth
 ##############
 echo "===== Starting geth installation =====";
-wget https://gethstore.blob.core.windows.net/builds/geth-alltools-linux-amd64-1.7.3-4bb3c89d.tar.gz || unsuccessful_exit "geth download failed"
- 3;
-wget https://gethstore.blob.core.windows.net/builds/geth-alltools-linux-amd64-1.7.3-4bb3c89d.tar.gz.asc || unsuccessful_exit "geth signature download failed"
- 4;
+wget https://gethstore.blob.core.windows.net/builds/geth-alltools-linux-amd64-1.7.3-4bb3c89d.tar.gz || unsuccessful_exit "geth download failed" 3;
+wget https://gethstore.blob.core.windows.net/builds/geth-alltools-linux-amd64-1.7.3-4bb3c89d.tar.gz.asc || unsuccessful_exit "geth signature download failed" 4;
 
 # Import geth buildserver keys
 gpg --recv-keys --keyserver hkp://keyserver.ubuntu.com F9585DE6 C2FF8BBF 9BA28146 7B9E2481 D2A67EAC || unsuccessful_exit "import geth buildserver keys failed" 5;
