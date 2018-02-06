@@ -267,3 +267,7 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
           value: '{{ namingInfix + "snet-mn" + ((((item)|int / numMiningNodesPerMember)|int + 1)|string) }}'
       template_link: '{{ fileLocation + "mnVMAuth-sshPublicKey.json" }}'
     with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}'
+
+# Configuring TX nodes
+  - name: Configure TX nodes
+    - script: configure-geth-azureuser.sh
