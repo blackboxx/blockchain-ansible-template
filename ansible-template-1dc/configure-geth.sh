@@ -28,7 +28,7 @@ CONFIG_LOG_FILE_PATH="$HOMEDIR/config.log";
 #############
 cd "/home/$AZUREUSER";
 
-sudo -u $AZUREUSER /bin/bash -c "wget -N ${ARTIFACTS_URL_PREFIX}/configure-geth-azureuser.sh";
+sudo -u $AZUREUSER /bin/bash -c "wget -N ${ARTIFACTS_URL_PREFIX}configure-geth-azureuser.sh";
 
 ##################################
 # Initiate loop for error checking
