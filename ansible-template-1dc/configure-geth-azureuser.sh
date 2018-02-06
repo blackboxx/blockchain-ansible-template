@@ -76,8 +76,9 @@ echo "===== Completed packages installation =====";
 # Install geth
 ##############
 echo "===== Starting geth installation =====";
-wget https://gethstore.blob.core.windows.net/builds/geth-alltools-linux-amd64-1.7.3-4bb3c89d.tar.gz || unsuccessful_exit "geth download failed" 3;
-wget https://gethstore.blob.core.windows.net/builds/geth-alltools-linux-amd64-1.7.3-4bb3c89d.tar.gz.asc || unsuccessful_exit "geth signature download failed" 4;
+sudo add-apt-repository -y ppa:ethereum/ethereum
+sudo apt-get update
+sudo apt-get install ethereum
 
 # Import geth buildserver keys
 gpg --recv-keys --keyserver hkp://keyserver.ubuntu.com F9585DE6 C2FF8BBF 9BA28146 7B9E2481 D2A67EAC || unsuccessful_exit "import geth buildserver keys failed" 5;
