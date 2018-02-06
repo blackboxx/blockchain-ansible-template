@@ -27,11 +27,10 @@ GETH_IPC_PORT=$8;
 NUM_BOOT_NODES=$9;
 NUM_MN_NODES=${10};
 MN_NODE_PREFIX=${11};
-SPECIFIED_GENESIS_BLOCK=${12};
-MN_NODE_SEQNUM=${13};   #Only supplied for NODE_TYPE=1
-NUM_TX_NODES=${13};     #Only supplied for NODE_TYPE=0
-TX_NODE_PREFIX=${14};   #Only supplied for NODE_TYPE=0
-ADMIN_SITE_PORT=${15};  #Only supplied for NODE_TYPE=0
+MN_NODE_SEQNUM=${12};   #Only supplied for NODE_TYPE=1
+NUM_TX_NODES=${12};     #Only supplied for NODE_TYPE=0
+TX_NODE_PREFIX=${13};   #Only supplied for NODE_TYPE=0
+ADMIN_SITE_PORT=${14};  #Only supplied for NODE_TYPE=0
 
 MINER_THREADS=1;
 # Difficulty constant represents ~15 sec. block generation for one node
@@ -149,29 +148,19 @@ if [ -z $ETHERBASE_ADDRESS ]; then unsuccessful_exit "could not determine addres
 rm $HOMEDIR/priv_genesis.key;
 rm $PASSWD_FILE;
 
-##############################################
-# Did we get a genesis file specified?  if so decode the base64
-# Otherwise we need to create one
-##############################################
-if [ ${#SPECIFIED_GENESIS_BLOCK} -gt 0 ]; then
-	# Genesis block comes in as base64, need to decode it
-	SPECIFIED_GENESIS_BLOCK=`echo ${SPECIFIED_GENESIS_BLOCK} | base64 --decode`;
-	echo ${SPECIFIED_GENESIS_BLOCK} > $GENESIS_FILE_PATH;
 
-	echo "===== Genesis block specified! =====";
-else
-	##############################################
-	# Setup Genesis file and pre-allocated account
-	##############################################
-	echo "===== Starting genesis file creation =====";
+##############################################
+# Setup Genesis file and pre-allocated account
+##############################################
+echo "===== Starting genesis file creation =====";
 
-	cd $HOMEDIR
-	wget -N ${ARTIFACTS_URL_PREFIX}/genesis-template.json.txt || unsuccessful_exit "failed to download genesis-template.json.txt" 15;
-	# Place our calculated difficulty into genesis file
-	sed s/#DIFFICULTY/$DIFFICULTY/ $HOMEDIR/genesis-template.json.txt > $HOMEDIR/genesis-intermediate1.json;
-	sed s/#PREFUND_ADDRESS/$ETHERBASE_ADDRESS/ $HOMEDIR/genesis-intermediate1.json > $HOMEDIR/genesis-intermediate2.json;
-	sed s/#NETWORKID/$NETWORK_ID/ $HOMEDIR/genesis-intermediate2.json > $HOMEDIR/genesis.json;
-fi
+cd $HOMEDIR
+wget -N ${ARTIFACTS_URL_PREFIX}/genesis-template.json.txt || unsuccessful_exit "failed to download genesis-template.json.txt" 15;
+# Place our calculated difficulty into genesis file
+sed s/#DIFFICULTY/$DIFFICULTY/ $HOMEDIR/genesis-template.json.txt > $HOMEDIR/genesis-intermediate1.json;
+sed s/#PREFUND_ADDRESS/$ETHERBASE_ADDRESS/ $HOMEDIR/genesis-intermediate1.json > $HOMEDIR/genesis-intermediate2.json;
+sed s/#NETWORKID/$NETWORK_ID/ $HOMEDIR/genesis-intermediate2.json > $HOMEDIR/genesis.json;
+
 
 ##################
 # Extract gasLimit from genesis.json, needed for miner option targetgaslimit 

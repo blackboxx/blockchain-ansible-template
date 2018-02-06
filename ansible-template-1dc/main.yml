@@ -59,6 +59,10 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
       "sku": "16.04-LTS",
       "version": "latest"
     }
+    ethereumNetworkID: 72
+    maxPeers: 25
+    txNode: 0
+    gethIPCPort: 30303
 
   tasks:
 
@@ -236,6 +240,30 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
           value: '{{ location }}'
         index:
           value: '{{ item }}'
+        fileLocation:
+          value: '{{ fileLocation }}'
+        ethereumAccountPsswd:
+          value: '{{ ethereumAccountPsswd }}'
+        ethereumAccountPassphrase:
+          value: '{{ ethereumAccountPassphrase }}'
+        ethereumNetworkID:
+          value: '{{ ethereumNetworkID }}'
+        maxPeers:
+          value: '{{ maxPeers }}'
+        txNode:
+          value: '{{ txNode }}'
+        gethIPCPort:
+          value: '{{ gethIPCPort }}'
+        numBootNodes:
+          value: '{{ numConsortiumMembers }}'
+        numMNNodes:
+          value: '{{ numMNNodes }}'
+        mnVMNamePrefix:
+          value: '{{ mnVMNamePrefix }}'
+        numTXNodes:
+          value: '{{ numTXNodes }}'
+        adminSitePort:
+          value: '{{ adminSitePort }}'
       template_link: '{{ fileLocation + "txVMAuth-sshPublicKey.json" }}'
     with_sequence: start=0 end='{{ (numTXNodes)|int - 1 }}'
 
@@ -267,7 +295,3 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
           value: '{{ namingInfix + "snet-mn" + ((((item)|int / numMiningNodesPerMember)|int + 1)|string) }}'
       template_link: '{{ fileLocation + "mnVMAuth-sshPublicKey.json" }}'
     with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}'
-
-# Configuring TX nodes
-  - name: Configure TX nodes
-    - script: configure-geth-azureuser.sh
