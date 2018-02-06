@@ -43,42 +43,6 @@
     },
     "index": {
       "type": "string"
-    },
-    "fileLocation": {
-      "type": "string"
-    },
-    "ethereumAccountPsswd": {
-      "type": "string"
-    },
-    "ethereumAccountPassphrase": {
-      "type": "string"
-    },
-    "ethereumNetworkID": {
-      "type": "int"
-    },
-    "maxPeers": {
-      "type": "int"
-    },
-    "txNode": {
-      "type": "int"
-    },
-    "gethIPCPort": {
-      "type": "int"
-    },
-    "numBootNodes": {
-      "type": "int"
-    },
-    "numMNNodes": {
-      "type": "string"
-    },
-    "mnVMNamePrefix": {
-      "type": "string"
-    },
-    "numTXNodes": {
-      "type": "int"
-    },
-    "adminSitePort": {
-      "type": "int"
     }
   },
   "variables": {
@@ -164,26 +128,6 @@
               "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('txNIPrefix'), parameters('index')))]"
             }
           ]
-        }
-      }
-    },
-    {
-      "apiVersion": "2017-03-30",
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('txVMNamePrefix'), parameters('index'), '/newuserscript')]",
-      "location": "[parameters('location')]",
-      "properties": {
-        "publisher": "Microsoft.Azure.Extensions",
-        "type": "CustomScript",
-        "typeHandlerVersion": "2.0",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "fileUris": [
-            "[concat(parameters('fileLocation'), '/scripts/configure-geth.sh')]"
-          ]
-        },
-        "protectedSettings": {
-          "commandToExecute": "[concat('/bin/bash configure-geth.sh \"', parameters('adminUsername'), '\" \"', parameters('ethereumAccountPsswd'), '\" \"', parameters('ethereumAccountPassphrase'), '\" \"', parameters('fileLocation'), '\" \"', parameters('ethereumNetworkID'), '\" \"', parameters('maxPeers'), '\" \"', parameters('txNode'), '\" \"', parameters('gethIPCPort'), '\" \"', parameters('numBootNodes'), '\" \"', int(parameters('numMNNodes')), '\" \"', parameters('mnVMNamePrefix'), '\" \"', parameters('numTXNodes'), '\" \"', parameters('txVMNamePrefix'), '\" \"', parameters('adminSitePort'), '\"')]"
         }
       }
     }

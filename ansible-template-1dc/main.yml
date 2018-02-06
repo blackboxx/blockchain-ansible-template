@@ -240,32 +240,45 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
           value: '{{ location }}'
         index:
           value: '{{ item }}'
+      template_link: '{{ fileLocation + "txVMAuth-sshPublicKey.json" }}'
+    with_sequence: start=0 end='{{ numTXNodes - 1 }}'
+
+# Configuring TX nodes
+  - name:
+    azure_rm_deployment:
+      resource_group_name: '{{ rgname }}'
+      location: '{{ location }}'
+      parameters:
+        numBootNodes:
+          value: '{{ numConsortiumMembers }}'
+        txVMNamePrefix:
+          value: '{{ txVMNamePrefix }}'
+        numTXNodes:
+          value: '{{ numTXNodes }}'
+        mnVMNamePrefix:
+          value: '{{ mnVMNamePrefix }}'
+        numMNNodes:
+          value: '{{ numMNNodes }}'
         fileLocation:
           value: '{{ fileLocation }}'
+        adminUsername:
+          value: '{{ adminUsername }}'
         ethereumAccountPsswd:
           value: '{{ ethereumAccountPsswd }}'
         ethereumAccountPassphrase:
           value: '{{ ethereumAccountPassphrase }}'
         ethereumNetworkID:
           value: '{{ ethereumNetworkID }}'
-        maxPeers:
-          value: '{{ maxPeers }}'
-        txNode:
-          value: '{{ txNode }}'
         gethIPCPort:
           value: '{{ gethIPCPort }}'
-        numBootNodes:
-          value: '{{ numConsortiumMembers }}'
-        numMNNodes:
-          value: '{{ numMNNodes }}'
-        mnVMNamePrefix:
-          value: '{{ mnVMNamePrefix }}'
-        numTXNodes:
-          value: '{{ numTXNodes }}'
         adminSitePort:
           value: '{{ adminSitePort }}'
-      template_link: '{{ fileLocation + "txVMAuth-sshPublicKey.json" }}'
-    with_sequence: start=0 end='{{ (numTXNodes)|int - 1 }}'
+        location:
+          value: '{{ location }}'
+        index:
+          value: '{{ item }}'
+      template_link: '{{ fileLocation + "vmExtension-tx.json" }}'
+    with_sequence: start=0 end='{{ numTXNodes - 1 }}'
 
 # Deploying MN nodes
   - name: Deploy MN nodes
