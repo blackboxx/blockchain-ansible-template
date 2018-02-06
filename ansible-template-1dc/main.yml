@@ -257,7 +257,7 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
         numBootNodes:
           value: '{{ numConsortiumMembers }}'
         numMNNodes:
-          value: '{{ numMNNodes }}'
+          value: '{{ (numMNNodes)|int }}'
         mnVMNamePrefix:
           value: '{{ mnVMNamePrefix }}'
         numTXNodes:
