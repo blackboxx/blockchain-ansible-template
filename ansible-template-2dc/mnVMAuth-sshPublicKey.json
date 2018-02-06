@@ -11,9 +11,6 @@
     "mnNICPrefix": {
       "type": "string"
     },
-    "namingInfix": {
-      "type": "string"
-    },
     "mnNodeVMSize": {
       "type": "string"
     },
@@ -65,6 +62,9 @@
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[concat(parameters('mnVMNamePrefix'), parameters('index'))]",
       "location": "[parameters('location')]",
+      "tags": {
+        "node": "mn"
+      },
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', parameters('mnNICPrefix'), parameters('index'))]"
       ],

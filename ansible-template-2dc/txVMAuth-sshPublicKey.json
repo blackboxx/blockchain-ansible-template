@@ -58,6 +58,9 @@
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[concat(parameters('txNIPrefix'), parameters('index'))]",
       "location": "[parameters('location')]",
+      "tags": {
+        "node": "mn"
+      },
       "properties": {
         "ipConfigurations": [
           {
