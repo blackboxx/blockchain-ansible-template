@@ -155,7 +155,7 @@ rm $PASSWD_FILE;
 echo "===== Starting genesis file creation =====";
 
 cd $HOMEDIR
-wget -O ${ARTIFACTS_URL_PREFIX}genesis-template.json.txt || unsuccessful_exit "failed to download genesis-template.json.txt" 15;
+wget -O genesis-template.json.txt ${ARTIFACTS_URL_PREFIX}genesis-template.json.txt || unsuccessful_exit "failed to download genesis-template.json.txt" 15;
 # Place our calculated difficulty into genesis file
 sed s/#DIFFICULTY/$DIFFICULTY/ $HOMEDIR/genesis-template.json.txt > $HOMEDIR/genesis-intermediate1.json;
 sed s/#PREFUND_ADDRESS/$ETHERBASE_ADDRESS/ $HOMEDIR/genesis-intermediate1.json > $HOMEDIR/genesis-intermediate2.json;
@@ -169,7 +169,7 @@ GASLIMIT=`cat "$GENESIS_FILE_PATH" | jq '.gasLimit'`;
 echo "===== Completed genesis file and pre-allocated account creation =====";
 
 cd $HOMEDIR
-wget -O ${ARTIFACTS_URL_PREFIX}start-private-blockchain.sh || unsuccessful_exit "failed to download start-private-blockchain.sh" 16;
+wget -O start-private-blockchain.sh ${ARTIFACTS_URL_PREFIX}start-private-blockchain.sh || unsuccessful_exit "failed to download start-private-blockchain.sh" 16;
 
 ####################
 # Initialize geth for private network
@@ -198,18 +198,18 @@ if [ $NODE_TYPE -eq 0 ]; then # TX nodes only
 	echo "===== Starting admin website setup =====";
 	mkdir -p $ETHERADMIN_HOME/views/layouts;
 	cd $ETHERADMIN_HOME/views/layouts;
-	wget -O ${ARTIFACTS_URL_PREFIX}main.handlebars || unsuccessful_exit "failed to download main.handlebars" 18;
+	wget -O main.handlebars ${ARTIFACTS_URL_PREFIX}main.handlebars || unsuccessful_exit "failed to download main.handlebars" 18;
 	cd $ETHERADMIN_HOME/views;
-	wget -O ${ARTIFACTS_URL_PREFIX}etheradmin.handlebars || unsuccessful_exit "failed to download etheradmin.handlebars" 19;
-	wget -O ${ARTIFACTS_URL_PREFIX}etherstartup.handlebars || unsuccessful_exit "failed to download etherstartup.handlebars" 20;
+	wget -O etheradmin.handlebars ${ARTIFACTS_URL_PREFIX}etheradmin.handlebars || unsuccessful_exit "failed to download etheradmin.handlebars" 19;
+	wget -O etherstartup.handlebars ${ARTIFACTS_URL_PREFIX}etherstartup.handlebars || unsuccessful_exit "failed to download etherstartup.handlebars" 20;
 	cd $ETHERADMIN_HOME;
-	wget -O ${ARTIFACTS_URL_PREFIX}package.json || unsuccessful_exit "failed to download package.json" 21;
-	wget -O ${ARTIFACTS_URL_PREFIX}npm-shrinkwrap.json || unsuccessful_exit "failed to download npm-shrinkwrap.json" 22;
+	wget -O package.json ${ARTIFACTS_URL_PREFIX}package.json || unsuccessful_exit "failed to download package.json" 21;
+	wget -O npm-shrinkwrap.json ${ARTIFACTS_URL_PREFIX}npm-shrinkwrap.json || unsuccessful_exit "failed to download npm-shrinkwrap.json" 22;
 	npm install || unsuccessful_exit "failed while running npm install" 23;
-	wget -O ${ARTIFACTS_URL_PREFIX}app.js || unsuccessful_exit "failed to download app.js" 24;
+	wget -O app.js ${ARTIFACTS_URL_PREFIX}app.js || unsuccessful_exit "failed to download app.js" 24;
 	mkdir $ETHERADMIN_HOME/public;
 	cd $ETHERADMIN_HOME/public;
-	wget -O ${ARTIFACTS_URL_PREFIX}skeleton.css || unsuccessful_exit "failed to download skeleton.css" 25;
+	wget -O skeleton.css ${ARTIFACTS_URL_PREFIX}skeleton.css || unsuccessful_exit "failed to download skeleton.css" 25;
 	echo "===== Completed admin website setup =====";
 fi
 
