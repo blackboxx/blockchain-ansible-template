@@ -170,7 +170,7 @@
     {
       "apiVersion": "2017-03-30",
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('txVMNamePrefix'), copyIndex(), '/newuserscript')]",
+      "name": "[concat(parameters('txVMNamePrefix'), parameters('index'), '/newuserscript')]",
       "location": "[parameters('location')]",
       "properties": {
         "publisher": "Microsoft.Azure.Extensions",
