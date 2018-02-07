@@ -57,9 +57,11 @@ DIFFICULTY=`printf "0x%X" $(($DIFFICULTY_CONSTANT * $NUM_MN_NODES))`;
 # Update modules
 ################
 echo "===== Starting packages update =====";
-sudo apt -y update || unsuccessful_exit "Error starting packages update" 29;
-sudo apt -y upgrade
-sudo apt -y full-upgrade
+sudo add-apt-repository -y ppa:ethereum/ethereum
+sudo apt-get -y update || unsuccessful_exit "Error starting packages update" 29;
+sudo apt-get -y upgrade
+sudo apt-get -y dist-upgrade
+sudo apt-get -y autoremove
 echo "===== Completed packages update =====";
 # To avoid intermittent issues with package DB staying locked when next apt-get runs
 sleep 5;
@@ -68,30 +70,9 @@ sleep 5;
 # Install packages
 ##################
 echo "===== Starting packages installation =====";
-sudo apt -y install npm git jq || unsuccessful_exit "package install 1 failed" 32;
+sudo apt-get -y install npm git jq || unsuccessful_exit "package install 1 failed" 32;
 sudo update-alternatives --install /usr/bin/node nodejs /usr/bin/nodejs 100 || unsuccessful_exit "package install 2 failed" 2;
 echo "===== Completed packages installation =====";
-
-##############
-# Install geth
-##############
-echo "===== Starting geth installation =====";
-sudo add-apt-repository -y ppa:ethereum/ethereum
-sudo apt-get update
-sudo apt-get install ethereum
-
-# Import geth buildserver keys
-gpg --recv-keys --keyserver hkp://keyserver.ubuntu.com F9585DE6 C2FF8BBF 9BA28146 7B9E2481 D2A67EAC || unsuccessful_exit "import geth buildserver keys failed" 5;
-
-# Validate signature
-gpg --verify geth-alltools-linux-amd64-1.7.3-4bb3c89d.tar.gz.asc || unsuccessful_exit "validate geth download failed" 6;
-
-# Unpack archive
-tar xzf geth-alltools-linux-amd64-1.7.3-4bb3c89d.tar.gz || unsuccessful_exit "geth download unpack failed" 7;
-
-# /usr/bin is in $PATH by default, we'll put our binaries there
-sudo cp geth-alltools-linux-amd64-1.7.3-4bb3c89d/* /usr/bin/ || unsuccessful_exit "copy of geth to /usr/bin failed" 8;
-echo "===== Completed geth installation =====";
 
 #############
 # Build node keys and node IDs
