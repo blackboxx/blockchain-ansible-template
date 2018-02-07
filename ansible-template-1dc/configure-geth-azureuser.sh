@@ -74,6 +74,13 @@ sudo apt-get -y install npm git jq || unsuccessful_exit "package install 1 faile
 sudo update-alternatives --install /usr/bin/node nodejs /usr/bin/nodejs 100 || unsuccessful_exit "package install 2 failed" 2;
 echo "===== Completed packages installation =====";
 
+##############
+# Install geth
+##############
+echo "===== Starting geth installation =====";
+sudo apt-get -y install ethereum
+echo "===== Completed geth installation =====";
+
 #############
 # Build node keys and node IDs
 #############
