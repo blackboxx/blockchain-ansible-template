@@ -21,7 +21,6 @@ while sleep 5; do
 		fi
 
 		LOOKUP=`nslookup $MN_NODE_PREFIX$i | grep "can't find"`
-		echo "$LOOKUP"
 		if [ -z $LOOKUP ]; then
 			FOUND_BOOTNODE=true
 			break

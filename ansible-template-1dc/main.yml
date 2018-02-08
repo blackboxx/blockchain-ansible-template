@@ -316,14 +316,10 @@
       parameters:
         numBootNodes:
           value: '{{ numConsortiumMembers }}'
-        txVMNamePrefix:
-          value: '{{ txVMNamePrefix }}'
-        numTXNodes:
-          value: '{{ numTXNodes }}'
         mnVMNamePrefix:
-          value: '{{ mnVMNamePrefix }}'
+          value: '{{ txVMNamePrefix }}'
         numMNNodes:
-          value: '{{ numMNNodes }}'
+          value: '{{ numTXNodes }}'
         fileLocation:
           value: '{{ fileLocation }}'
         adminUsername:
@@ -336,8 +332,6 @@
           value: '{{ ethereumNetworkID }}'
         gethIPCPort:
           value: '{{ gethIPCPort }}'
-        adminSitePort:
-          value: '{{ adminSitePort }}'
         location:
           value: '{{ location }}'
         index:
