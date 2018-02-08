@@ -2,15 +2,17 @@
   hosts: localhost
   connection: local
 
-  vars_prompt:
-  - name: "ethereumAccountPsswd"
-    prompt: "Enter Ethereum Account Password"
-    private: yes
-  - name: "ethereumAccountPassphrase"
-    prompt: "Enter Ethereum Account Passphrase"
-    private: yes
+#  vars_prompt:
+#  - name: "ethereumAccountPsswd"
+#    prompt: "Enter Ethereum Account Password"
+#    private: yes
+#  - name: "ethereumAccountPassphrase"
+#    prompt: "Enter Ethereum Account Passphrase"
+#    private: yes
 
   vars:
+    ethereumAccountPsswd: "SupertajneHeslo123"
+    ethereumAccountPassphrase: "SupertajneHeslo123"
     location: westeurope
     fileLocation: https://raw.githubusercontent.com/luberan/blockchain-ansible-template/master/ansible-template-1dc/
     subscription_id: 315e66d2-b933-43ae-9af1-e401260cff54
