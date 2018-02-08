@@ -69,7 +69,7 @@ sleep 5;
 # Install packages
 ##################
 echo "===== Starting packages installation =====";
-sudo apt-get -y install npm=3.5.2-0ubuntu4 git=1:2.7.4-0ubuntu1 jq=1.5+dfsg-1 || unsuccessful_exit "package install 1 failed" 32;
+sudo apt-get -y install npm=3.5.2-0ubuntu4 git jq=1.5+dfsg-1 || unsuccessful_exit "package install 1 failed" 32;
 sudo update-alternatives --install /usr/bin/node nodejs /usr/bin/nodejs 100 || unsuccessful_exit "package install 2 failed" 2;
 echo "===== Completed packages installation =====";
 
