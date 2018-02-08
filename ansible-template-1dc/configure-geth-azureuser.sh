@@ -253,7 +253,7 @@ echo "===== Completed setting up rc.local for restart on VM reboot =====";
 # Start geth
 ############
 echo "===== Starting private blockchain network =====";
-/bin/bash $HOMEDIR/start-private-blockchain.sh $GETH_CFG_FILE_PATH $PASSWD || unsuccessful_exit "failed while running start-private-blockchain.sh" 27;
+/bin/bash $HOMEDIR/start-private-blockchain.sh "$GETH_CFG_FILE_PATH" "$PASSWD" || unsuccessful_exit "failed while running start-private-blockchain.sh" 27;
 echo "===== Started private blockchain network successfully =====";
 
 echo "===== All commands in ${0} succeeded. Exiting. =====";
