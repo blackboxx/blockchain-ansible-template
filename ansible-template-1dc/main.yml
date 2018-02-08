@@ -317,9 +317,9 @@
         numBootNodes:
           value: '{{ numConsortiumMembers }}'
         mnVMNamePrefix:
-          value: '{{ txVMNamePrefix }}'
+          value: '{{ mnVMNamePrefix }}'
         numMNNodes:
-          value: '{{ numTXNodes }}'
+          value: '{{ numMNNodes }}'
         fileLocation:
           value: '{{ fileLocation }}'
         adminUsername:
