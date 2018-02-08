@@ -57,7 +57,6 @@ DIFFICULTY=`printf "0x%X" $(($DIFFICULTY_CONSTANT * $NUM_MN_NODES))`;
 # Update modules
 ################
 echo "===== Starting packages update =====";
-sudo add-apt-repository -y ppa:ethereum/ethereum
 sudo apt-get -y update || unsuccessful_exit "Error starting packages update" 29;
 sudo apt-get -y upgrade
 sudo apt-get -y dist-upgrade
@@ -70,7 +69,7 @@ sleep 5;
 # Install packages
 ##################
 echo "===== Starting packages installation =====";
-sudo apt-get -y install npm git jq || unsuccessful_exit "package install 1 failed" 32;
+sudo apt-get -y install npm=3.5.2-0ubuntu4 git=1:2.7.4-0ubuntu1 jq=1.5+dfsg-1 || unsuccessful_exit "package install 1 failed" 32;
 sudo update-alternatives --install /usr/bin/node nodejs /usr/bin/nodejs 100 || unsuccessful_exit "package install 2 failed" 2;
 echo "===== Completed packages installation =====";
 
@@ -78,7 +77,22 @@ echo "===== Completed packages installation =====";
 # Install geth
 ##############
 echo "===== Starting geth installation =====";
-sudo apt-get -y install ethereum
+wget https://gethstore.blob.core.windows.net/builds/geth-alltools-linux-amd64-1.7.3-4bb3c89d.tar.gz || unsuccessful_exit "geth download failed"
+ 3;
+wget https://gethstore.blob.core.windows.net/builds/geth-alltools-linux-amd64-1.7.3-4bb3c89d.tar.gz.asc || unsuccessful_exit "geth signature download failed"
+ 4;
+
+# Import geth buildserver keys
+gpg --recv-keys --keyserver hkp://keyserver.ubuntu.com F9585DE6 C2FF8BBF 9BA28146 7B9E2481 D2A67EAC || unsuccessful_exit "import geth buildserver keys failed" 5;
+
+# Validate signature
+gpg --verify geth-alltools-linux-amd64-1.7.3-4bb3c89d.tar.gz.asc || unsuccessful_exit "validate geth download failed" 6;
+
+# Unpack archive
+tar xzf geth-alltools-linux-amd64-1.7.3-4bb3c89d.tar.gz || unsuccessful_exit "geth download unpack failed" 7;
+
+# /usr/bin is in $PATH by default, we'll put our binaries there
+sudo cp geth-alltools-linux-amd64-1.7.3-4bb3c89d/* /usr/bin/ || unsuccessful_exit "copy of geth to /usr/bin failed" 8;
 echo "===== Completed geth installation =====";
 
 #############
@@ -136,7 +150,6 @@ if [ -z $ETHERBASE_ADDRESS ]; then unsuccessful_exit "could not determine addres
 rm $HOMEDIR/priv_genesis.key;
 rm $PASSWD_FILE;
 
-
 ##############################################
 # Setup Genesis file and pre-allocated account
 ##############################################
@@ -148,7 +161,6 @@ wget -O genesis-template.json.txt ${ARTIFACTS_URL_PREFIX}genesis-template.json.t
 sed s/#DIFFICULTY/$DIFFICULTY/ $HOMEDIR/genesis-template.json.txt > $HOMEDIR/genesis-intermediate1.json;
 sed s/#PREFUND_ADDRESS/$ETHERBASE_ADDRESS/ $HOMEDIR/genesis-intermediate1.json > $HOMEDIR/genesis-intermediate2.json;
 sed s/#NETWORKID/$NETWORK_ID/ $HOMEDIR/genesis-intermediate2.json > $HOMEDIR/genesis.json;
-
 
 ##################
 # Extract gasLimit from genesis.json, needed for miner option targetgaslimit 
@@ -253,7 +265,7 @@ echo "===== Completed setting up rc.local for restart on VM reboot =====";
 # Start geth
 ############
 echo "===== Starting private blockchain network =====";
-/bin/bash $HOMEDIR/start-private-blockchain.sh "$GETH_CFG_FILE_PATH" "$PASSWD" || unsuccessful_exit "failed while running start-private-blockchain.sh" 27;
+/bin/bash $HOMEDIR/start-private-blockchain.sh $GETH_CFG_FILE_PATH $PASSWD || unsuccessful_exit "failed while running start-private-blockchain.sh" 27;
 echo "===== Started private blockchain network successfully =====";
 
 echo "===== All commands in ${0} succeeded. Exiting. =====";
