@@ -242,6 +242,35 @@
       template_link: '{{ fileLocation + "txVMAuth-sshPublicKey.json" }}'
     with_sequence: start=0 end='{{ numTXNodes - 1 }}'
 
+# Deploying MN nodes
+  - name: Deploy MN nodes
+    azure_rm_deployment:
+      resource_group_name: '{{ rgname }}'
+      location: '{{ location }}'
+      parameters:
+        virtualNetworkName:
+          value: '{{ virtualNetworkName }}'
+        mnVMNamePrefix:
+          value: '{{ mnVMNamePrefix }}'
+        mnNICPrefix:
+          value: '{{ mnNICPrefix }}'
+        mnNodeVMSize:
+          value: '{{ mnNodeVMSize }}'
+        adminUsername:
+          value: '{{ adminUsername }}'
+        adminSSHKey:
+          value: '{{ adminSSHKey }}'
+        ubuntuImage:
+          value: '{{ ubuntuImage }}'
+        location:
+          value: '{{ location }}'
+        index:
+          value: '{{ item }}'
+        mnSubnetName:
+          value: '{{ namingInfix + "snet-mn" + ((((item)|int / numMiningNodesPerMember)|int + 1)|string) }}'
+      template_link: '{{ fileLocation + "mnVMAuth-sshPublicKey.json" }}'
+    with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}'
+
 # Configuring TX nodes
   - name: Configure TX nodes
     azure_rm_deployment:
@@ -278,35 +307,6 @@
           value: '{{ item }}'
       template_link: '{{ fileLocation + "vmExtension-tx.json" }}'
     with_sequence: start=0 end='{{ numTXNodes - 1 }}'
-
-# Deploying MN nodes
-  - name: Deploy MN nodes
-    azure_rm_deployment:
-      resource_group_name: '{{ rgname }}'
-      location: '{{ location }}'
-      parameters:
-        virtualNetworkName:
-          value: '{{ virtualNetworkName }}'
-        mnVMNamePrefix:
-          value: '{{ mnVMNamePrefix }}'
-        mnNICPrefix:
-          value: '{{ mnNICPrefix }}'
-        mnNodeVMSize:
-          value: '{{ mnNodeVMSize }}'
-        adminUsername:
-          value: '{{ adminUsername }}'
-        adminSSHKey:
-          value: '{{ adminSSHKey }}'
-        ubuntuImage:
-          value: '{{ ubuntuImage }}'
-        location:
-          value: '{{ location }}'
-        index:
-          value: '{{ item }}'
-        mnSubnetName:
-          value: '{{ namingInfix + "snet-mn" + ((((item)|int / numMiningNodesPerMember)|int + 1)|string) }}'
-      template_link: '{{ fileLocation + "mnVMAuth-sshPublicKey.json" }}'
-    with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}'
 
 # Configuring MN nodes
   - name: Configure MN nodes
