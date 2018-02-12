@@ -241,18 +241,6 @@
           value: '{{ item }}'
       template_link: '{{ fileLocation + "txVMAuth-sshPublicKey.json" }}'
     with_sequence: start=0 end='{{ numTXNodes - 1 }}'
-#    register: txnodes_wait
-    async: 7200
-    poll: 0
-
-# Waiting for TX nodes creation to complete
-#  - name: Wait for TX nodes creation to complete
-#    async_status:
-#      jid: '{{ item.ansible_job_id }}'
-#    register: txnodes_result
-#    until: txnodes_result.finished
-#    retries: 300
-#    with_items: '{{ txnodes_wait.results }}'
 
 # Deploying MN nodes
   - name: Deploy MN nodes
@@ -282,18 +270,6 @@
           value: '{{ namingInfix + "snet-mn" + ((((item)|int / numMiningNodesPerMember)|int + 1)|string) }}'
       template_link: '{{ fileLocation + "mnVMAuth-sshPublicKey.json" }}'
     with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}'
-    register: mnnodes_wait
-    async: 7200
-    poll: 0
-
-# Waiting for MN nodes creation to complete
-  - name: Wait for MN nodes creation to complete
-    async_status:
-      jid: '{{ item.ansible_job_id }}'
-    register: mnnodes_result
-    until: mnnodes_result.finished
-    retries: 300
-    with_items: '{{ mnnodes_wait.results }}'
 
 # Configuring TX nodes
   - name: Configure TX nodes
@@ -331,9 +307,6 @@
           value: '{{ item }}'
       template_link: '{{ fileLocation + "vmExtension-tx.json" }}'
     with_sequence: start=0 end='{{ numTXNodes - 1 }}'
-    register: txnodes_config
-    async: 7200
-    poll: 0
 
 # Configuring MN nodes
   - name: Configure MN nodes
@@ -368,12 +341,3 @@
     register: mnnodes_config
     async: 7200
     poll: 0
-
-# Waiting for MN nodes configuration to complete
-  - name: Wait for MN nodes configuration to complete
-    async_status:
-      jid: '{{ item.ansible_job_id }}'
-    register: mnnodes_config_result
-    until: mnnodes_config_result.finished
-    retries: 300
-    with_items: '{{ mnnodes_config.results }}'
