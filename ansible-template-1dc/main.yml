@@ -241,18 +241,18 @@
           value: '{{ item }}'
       template_link: '{{ fileLocation + "txVMAuth-sshPublicKey.json" }}'
     with_sequence: start=0 end='{{ numTXNodes - 1 }}'
-    register: txnodes_wait
+#    register: txnodes_wait
     async: 7200
     poll: 0
 
 # Waiting for TX nodes creation to complete
-  - name: Wait for TX nodes creation to complete
-    async_status:
-      jid: '{{ item.ansible_job_id }}'
-    register: txnodes_result
-    until: txnodes_result.finished
-    retries: 300
-    with_items: '{{ txnodes_wait.results }}'
+#  - name: Wait for TX nodes creation to complete
+#    async_status:
+#      jid: '{{ item.ansible_job_id }}'
+#    register: txnodes_result
+#    until: txnodes_result.finished
+#    retries: 300
+#    with_items: '{{ txnodes_wait.results }}'
 
 # Deploying MN nodes
   - name: Deploy MN nodes
