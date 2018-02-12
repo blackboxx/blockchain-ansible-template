@@ -280,12 +280,10 @@
 
 # Waiting for nodes creation to complete
   - name: Wait for nodes creation to complete
-    async_status: 
-      jid: '{{ item.ansible_job_id }}'
+    async_status: jid={{ item.ansible_job_id }}
     register: creationjob_result
     until: creationjob_result.finished
     retries: 300
-    delay: 5
     with_items: '{{ mnnodes_wait.results }}'
 
 # Configuring TX nodes
