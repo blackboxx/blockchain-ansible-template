@@ -252,7 +252,7 @@
     register: txnodes_result
     until: txnodes_result.finished
     retries: 300
-    with_items: txnodes_wait.results
+    with_items: '{{ txnodes_wait.results }}'
 
 # Deploying MN nodes
   - name: Deploy MN nodes
@@ -293,7 +293,7 @@
     register: mnnodes_result
     until: mnnodes_result.finished
     retries: 300
-    with_items: mnnodes_wait.results
+    with_items: '{{ mnnodes_wait.results }}'
 
 # Configuring TX nodes
   - name: Configure TX nodes
