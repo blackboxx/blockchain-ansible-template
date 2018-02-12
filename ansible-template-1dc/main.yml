@@ -338,6 +338,3 @@
           value: '{{ item }}'
       template_link: '{{ fileLocation + "vmExtension-mn.json" }}'
     with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}'
-    register: mnnodes_config
-    async: 7200
-    poll: 0
