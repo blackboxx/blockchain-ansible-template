@@ -245,8 +245,8 @@
     async: 7200
     poll: 0
 
-# Waiting for nodes creation to complete
-  - name: Wait for nodes creation to complete
+# Waiting for TX nodes creation to complete
+  - name: Wait for TX nodes creation to complete
     async_status:
       jid: '{{ item.ansible_job_id }}'
     register: txnodes_result
@@ -286,8 +286,8 @@
     async: 7200
     poll: 0
 
-# Waiting for nodes creation to complete
-  - name: Wait for nodes creation to complete
+# Waiting for MN nodes creation to complete
+  - name: Wait for MN nodes creation to complete
     async_status:
       jid: '{{ item.ansible_job_id }}'
     register: mnnodes_result
@@ -331,7 +331,7 @@
           value: '{{ item }}'
       template_link: '{{ fileLocation + "vmExtension-tx.json" }}'
     with_sequence: start=0 end='{{ numTXNodes - 1 }}'
-    register: tx_nodes
+    register: txnodes_config
     async: 7200
     poll: 0
 
@@ -365,14 +365,15 @@
           value: '{{ item }}'
       template_link: '{{ fileLocation + "vmExtension-mn.json" }}'
     with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}'
-    register: mn_nodes
+    register: mnnodes_config
     async: 7200
     poll: 0
 
-# Waiting for nodes configuration to complete
-  - name: Wait for nodes configuration to complete
-    async_status: jid={{ item.ansible_job_id }}
-    register: creation_jobs
-    until: creation_jobs.finished
+# Waiting for MN nodes configuration to complete
+  - name: Wait for MN nodes configuration to complete
+    async_status:
+      jid: '{{ item.ansible_job_id }}'
+    register: mnnodes_config_result
+    until: mnnodes_config_result.finished
     retries: 300
-    with_items: mn_nodes.results
+    with_items: '{{ mnnodes_config.results }}'
