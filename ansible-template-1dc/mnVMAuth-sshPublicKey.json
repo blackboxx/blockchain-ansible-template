@@ -41,7 +41,7 @@
     {
       "apiVersion": "2016-09-01",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(parameters('mnNICPrefix'), '-', parameters('index'))]",
+      "name": "[concat(parameters('mnNICPrefix'), parameters('index'))]",
       "location": "[parameters('location')]",
       "properties": {
         "ipConfigurations": [
@@ -60,20 +60,20 @@
     {
       "apiVersion": "2017-03-30",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(parameters('mnVMNamePrefix'), '-', parameters('index'))]",
+      "name": "[concat(parameters('mnVMNamePrefix'), parameters('index'))]",
       "location": "[parameters('location')]",
       "tags": {
         "node": "mn"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', parameters('mnNICPrefix'), '-', parameters('index'))]"
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('mnNICPrefix'), parameters('index'))]"
       ],
       "properties": {
         "hardwareProfile": {
           "vmSize": "[parameters('mnNodeVMSize')]"
         },
         "osProfile": {
-          "computerName": "[concat(parameters('mnVMNamePrefix'), '-', parameters('index'))]",
+          "computerName": "[concat(parameters('mnVMNamePrefix'), parameters('index'))]",
           "adminUsername": "[parameters('adminUsername')]",
           "linuxConfiguration": {
             "disablePasswordAuthentication": true,
@@ -91,13 +91,13 @@
           "imageReference": "[parameters('ubuntuImage')]",
           "osDisk": {
             "createOption": "FromImage",
-            "name": "[concat(parameters('mnVMNamePrefix'), '-', parameters('index'), '-osdisk')]"
+            "name": "[concat(parameters('mnVMNamePrefix'), parameters('index'), '-osdisk')]"
           }
         },
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('mnNICPrefix'), '-', parameters('index')))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('mnNICPrefix'), parameters('index')))]"
             }
           ]
         }

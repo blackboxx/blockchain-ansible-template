@@ -56,7 +56,7 @@
     {
       "apiVersion": "2016-09-01",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(parameters('txNIPrefix'), '-', parameters('index'))]",
+      "name": "[concat(parameters('txNIPrefix'), parameters('index'))]",
       "location": "[parameters('location')]",
       "properties": {
         "ipConfigurations": [
@@ -74,7 +74,7 @@
               ],
               "loadBalancerInboundNatRules": [
                 {
-                  "id": "[concat(variables('loadBalancerInboundNatRuleIDprefix'), '-', parameters('index'))]"
+                  "id": "[concat(variables('loadBalancerInboundNatRuleIDprefix'), parameters('index'))]"
                 }
               ]
             }
@@ -85,13 +85,13 @@
     {
       "apiVersion": "2017-03-30",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(parameters('txVMNamePrefix'), '-', parameters('index'))]",
+      "name": "[concat(parameters('txVMNamePrefix'), parameters('index'))]",
       "location": "[parameters('location')]",
       "tags": {
         "node": "tx"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', parameters('txNIPrefix'), '-', parameters('index'))]"
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('txNIPrefix'), parameters('index'))]"
       ],
       "properties": {
         "availabilitySet": {
@@ -101,7 +101,7 @@
           "vmSize": "[parameters('txNodeVMSize')]"
         },
         "osProfile": {
-          "computerName": "[concat(parameters('txVMNamePrefix'), '-', parameters('index'))]",
+          "computerName": "[concat(parameters('txVMNamePrefix'), parameters('index'))]",
           "adminUsername": "[parameters('adminUsername')]",
           "linuxConfiguration": {
             "disablePasswordAuthentication": true,
@@ -119,13 +119,13 @@
           "imageReference": "[parameters('ubuntuImage')]",
           "osDisk": {
             "createOption": "FromImage",
-            "name": "[concat(parameters('txVMNamePrefix'), '-', parameters('index'), '-osdisk')]"
+            "name": "[concat(parameters('txVMNamePrefix'), parameters('index'), '-osdisk')]"
           }
         },
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('txNIPrefix'), '-', parameters('index')))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('txNIPrefix'), parameters('index')))]"
             }
           ]
         }
