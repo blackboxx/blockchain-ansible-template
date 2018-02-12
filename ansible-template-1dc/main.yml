@@ -247,7 +247,7 @@
 
 # Waiting for nodes creation to complete
 - name: Wait for nodes creation to complete
-async_status: jid={{ item.ansible_job_id }}
+async_status: jid='{{ item.ansible_job_id }}'
 register: txnodes_result
 until: txnodes_result.finished
 retries: 300
@@ -287,7 +287,7 @@ with_items: '{{ txnodes_wait.results }}'
 
 # Waiting for nodes creation to complete
   - name: Wait for nodes creation to complete
-    async_status: jid={{ item.ansible_job_id }}
+    async_status: jid='{{ item.ansible_job_id }}'
     register: mnnodes_result
     until: mnnodes_result.finished
     retries: 300
