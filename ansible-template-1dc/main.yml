@@ -245,6 +245,13 @@
     async: 7200
     poll: 0
 
+# Waiting for nodes creation to complete
+- name: Wait for nodes creation to complete
+async_status: jid={{ item.ansible_job_id }}
+register: txnodes_result
+until: txnodes_result.finished
+retries: 300
+with_items: '{{ txnodes_wait.results }}'
 
 # Deploying MN nodes
   - name: Deploy MN nodes
@@ -281,8 +288,8 @@
 # Waiting for nodes creation to complete
   - name: Wait for nodes creation to complete
     async_status: jid={{ item.ansible_job_id }}
-    register: creationjob_result
-    until: creationjob_result.finished
+    register: mnnodes_result
+    until: mnnodes_result.finished
     retries: 300
     with_items: '{{ mnnodes_wait.results }}'
 
