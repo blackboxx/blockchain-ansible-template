@@ -41,7 +41,7 @@
     {
       "apiVersion": "2016-09-01",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(parameters('mnNICPrefix'), parameters('index'))]",
+      "name": "[concat(parameters('mnNICPrefix'), '-', parameters('index'))]",
       "location": "[parameters('location')]",
       "properties": {
         "ipConfigurations": [
