@@ -280,7 +280,8 @@
 
 # Waiting for nodes creation to complete
   - name: Wait for nodes creation to complete
-    async_status: jid='{{ item.ansible_job_id }}'
+    async_status: 
+      jid: '{{ item.ansible_job_id }}'
     register: creation_jobs
     until: creation_jobs.finished
     retries: 300
