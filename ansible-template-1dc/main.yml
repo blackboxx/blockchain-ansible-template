@@ -33,9 +33,9 @@
     numMNNodes: '{{ numConsortiumMembers * numMiningNodesPerMember }}'
     loadBalancerName: '{{ namePrefix + "-lb" }}'
     loadBalancerBackendAddressPoolName: LoadBalancerBackend1
-    mnVMNamePrefix: '{{ namePrefix + "-mn-" }}'
+    mnVMNamePrefix: '{{ namePrefix + "-mn" }}'
     mnNICPrefix: '{{ namePrefix + "-nic-mn" }}'
-    txVMNamePrefix: '{{ namePrefix + "-tx-" }}'
+    txVMNamePrefix: '{{ namePrefix + "-tx" }}'
     txSubnetName: '{{ namePrefix + "-tx-subnet" }}'
     txSubnetPrefix: 10.0.0.0/24
     txNIPrefix: '{{ namePrefix + "-nic-tx" }}'
@@ -153,7 +153,7 @@
   - name: Add MN subnet
     azure_rm_subnet:
       resource_group: '{{ rgname }}'
-      name: '{{ namePrefix + "-mn-subnet-" + item }}'
+      name: '{{ namePrefix + "-mn-subnet" + item }}'
       address_prefix: '{{ "10.0." + item + ".0/24" }}'
       virtual_network: '{{ virtualNetworkName }}'
       security_group_name: '{{ mnNsgName }}'
@@ -260,7 +260,7 @@
         index:
           value: '{{ item }}'
         mnSubnetName:
-          value: '{{ namePrefix + "-mn-subnet-" + ((((item)|int / numMiningNodesPerMember)|int + 1)|string) }}'
+          value: '{{ namePrefix + "-mn-subnet" + ((((item)|int / numMiningNodesPerMember)|int + 1)|string) }}'
       template_link: '{{ fileLocation + "mnVMAuth-sshPublicKey.json" }}'
     with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}'
 
