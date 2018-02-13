@@ -234,15 +234,6 @@
           value: '{{ item }}'
       template_link: '{{ fileLocation + "txVMAuth-sshPublicKey.json" }}'
     with_sequence: start=0 end='{{ numTXNodes - 1 }}'
-    register: txnodes
-
-# Restarting TX nodes
-  - name: Restart TX nodes
-    azure_rm_virtualmachine:
-      name: '{{ txVMNamePrefix + item }}'
-      resource_group: '{{ rgname }}'
-      restarted: yes
-    with_sequence: start=0 end='{{ numTXNodes - 1 }}'
 
 # Deploying MN nodes
   - name: Deploy MN nodes
@@ -271,14 +262,6 @@
         mnSubnetName:
           value: '{{ namePrefix + "-mn-subnet" + ((((item)|int / numMiningNodesPerMember)|int + 1)|string) }}'
       template_link: '{{ fileLocation + "mnVMAuth-sshPublicKey.json" }}'
-    with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}'
-
-# Restarting MN nodes
-  - name: Restart MN nodes
-    azure_rm_virtualmachine:
-      name: '{{ mnVMNamePrefix + item }}'
-      resource_group: '{{ rgname }}'
-      restarted: yes
     with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}'
 
 # Configuring TX nodes
@@ -318,6 +301,14 @@
       template_link: '{{ fileLocation + "vmExtension-tx.json" }}'
     with_sequence: start=0 end='{{ numTXNodes - 1 }}'
 
+# Restarting TX nodes
+  - name: Restart TX nodes
+    azure_rm_virtualmachine:
+      name: '{{ txVMNamePrefix + item }}'
+      resource_group: '{{ rgname }}'
+      restarted: yes
+    with_sequence: start=0 end='{{ numTXNodes - 1 }}'
+
 # Configuring MN nodes
   - name: Configure MN nodes
     azure_rm_deployment:
@@ -347,4 +338,12 @@
         index:
           value: '{{ item }}'
       template_link: '{{ fileLocation + "vmExtension-mn.json" }}'
+    with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}'
+
+# Restarting MN nodes
+  - name: Restart MN nodes
+    azure_rm_virtualmachine:
+      name: '{{ mnVMNamePrefix + item }}'
+      resource_group: '{{ rgname }}'
+      restarted: yes
     with_sequence: start=0 end='{{ (numMNNodes)|int - 1 }}'
