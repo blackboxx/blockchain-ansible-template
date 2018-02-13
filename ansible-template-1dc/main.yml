@@ -22,7 +22,7 @@
     numMiningNodesPerMember: 3
     txNodeVMSize: Standard_A1_v2
     numTXNodes: 3
-    mnNodeVMSize: Standard_A4_v2
+    mnNodeVMSize: Standard_A2_v2
     availabilitySetName: '{{ namePrefix + "-avset" }}'
     httpPort: 80
     adminSitePort: 3000

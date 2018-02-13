@@ -32,7 +32,7 @@ NUM_TX_NODES=${12};     #Only supplied for NODE_TYPE=0
 TX_NODE_PREFIX=${13};   #Only supplied for NODE_TYPE=0
 ADMIN_SITE_PORT=${14};  #Only supplied for NODE_TYPE=0
 
-MINER_THREADS=1;
+MINER_THREADS=2;
 # Difficulty constant represents ~15 sec. block generation for one node
 DIFFICULTY_CONSTANT="0x3333";
 
