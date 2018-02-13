@@ -18,10 +18,10 @@
     rgname: '{{ namePrefix + "-" + location }}'
     namePrefix: eth
     adminUsername: gethadmin
-    numConsortiumMembers: 4
-    numMiningNodesPerMember: 3
+    numConsortiumMembers: 2
+    numMiningNodesPerMember: 1
     txNodeVMSize: Standard_A1_v2
-    numTXNodes: 3
+    numTXNodes: 1
     mnNodeVMSize: Standard_A2_v2
     availabilitySetName: '{{ namePrefix + "-avset" }}'
     httpPort: 80
