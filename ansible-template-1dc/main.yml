@@ -19,7 +19,7 @@
     namePrefix: eth
     adminUsername: gethadmin
     numConsortiumMembers: 4
-    numMiningNodesPerMember: 3
+    numMiningNodesPerMember: 2
     txNodeVMSize: Standard_A1_v2
     numTXNodes: 3
     mnNodeVMSize: Standard_A2_v2
