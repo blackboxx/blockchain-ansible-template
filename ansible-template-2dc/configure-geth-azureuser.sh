@@ -27,13 +27,12 @@ GETH_IPC_PORT=$8;
 NUM_BOOT_NODES=$9;
 NUM_MN_NODES=${10};
 MN_NODE_PREFIX=${11};
-SPECIFIED_GENESIS_BLOCK=${12};
-MN_NODE_SEQNUM=${13};   #Only supplied for NODE_TYPE=1
-NUM_TX_NODES=${13};     #Only supplied for NODE_TYPE=0
-TX_NODE_PREFIX=${14};   #Only supplied for NODE_TYPE=0
-ADMIN_SITE_PORT=${15};  #Only supplied for NODE_TYPE=0
+MN_NODE_SEQNUM=${12};   #Only supplied for NODE_TYPE=1
+NUM_TX_NODES=${12};     #Only supplied for NODE_TYPE=0
+TX_NODE_PREFIX=${13};   #Only supplied for NODE_TYPE=0
+ADMIN_SITE_PORT=${14};  #Only supplied for NODE_TYPE=0
 
-MINER_THREADS=1;
+MINER_THREADS=2;
 # Difficulty constant represents ~15 sec. block generation for one node
 DIFFICULTY_CONSTANT="0x3333";
 
@@ -58,8 +57,10 @@ DIFFICULTY=`printf "0x%X" $(($DIFFICULTY_CONSTANT * $NUM_MN_NODES))`;
 # Update modules
 ################
 echo "===== Starting packages update =====";
-sudo apt-get -y update || unsuccessful_exit "Error starting packages update
-" 29;
+sudo apt-get -y update || unsuccessful_exit "Error starting packages update" 29;
+sudo apt-get -y upgrade
+sudo apt-get -y dist-upgrade
+sudo apt-get -y autoremove
 echo "===== Completed packages update =====";
 # To avoid intermittent issues with package DB staying locked when next apt-get runs
 sleep 5;
@@ -68,7 +69,7 @@ sleep 5;
 # Install packages
 ##################
 echo "===== Starting packages installation =====";
-sudo apt-get -y install npm=3.5.2-0ubuntu4 git=1:2.7.4-0ubuntu1 jq=1.5+dfsg-1 || unsuccessful_exit "package install 1 failed" 32;
+sudo apt-get -y install npm=3.5.2-0ubuntu4 git jq=1.5+dfsg-1 || unsuccessful_exit "package install 1 failed" 32;
 sudo update-alternatives --install /usr/bin/node nodejs /usr/bin/nodejs 100 || unsuccessful_exit "package install 2 failed" 2;
 echo "===== Completed packages installation =====";
 
@@ -150,28 +151,16 @@ rm $HOMEDIR/priv_genesis.key;
 rm $PASSWD_FILE;
 
 ##############################################
-# Did we get a genesis file specified?  if so decode the base64
-# Otherwise we need to create one
+# Setup Genesis file and pre-allocated account
 ##############################################
-if [ ${#SPECIFIED_GENESIS_BLOCK} -gt 0 ]; then
-	# Genesis block comes in as base64, need to decode it
-	SPECIFIED_GENESIS_BLOCK=`echo ${SPECIFIED_GENESIS_BLOCK} | base64 --decode`;
-	echo ${SPECIFIED_GENESIS_BLOCK} > $GENESIS_FILE_PATH;
+echo "===== Starting genesis file creation =====";
 
-	echo "===== Genesis block specified! =====";
-else
-	##############################################
-	# Setup Genesis file and pre-allocated account
-	##############################################
-	echo "===== Starting genesis file creation =====";
-
-	cd $HOMEDIR
-	wget -N ${ARTIFACTS_URL_PREFIX}/genesis-template.json.txt || unsuccessful_exit "failed to download genesis-template.json.txt" 15;
-	# Place our calculated difficulty into genesis file
-	sed s/#DIFFICULTY/$DIFFICULTY/ $HOMEDIR/genesis-template.json.txt > $HOMEDIR/genesis-intermediate1.json;
-	sed s/#PREFUND_ADDRESS/$ETHERBASE_ADDRESS/ $HOMEDIR/genesis-intermediate1.json > $HOMEDIR/genesis-intermediate2.json;
-	sed s/#NETWORKID/$NETWORK_ID/ $HOMEDIR/genesis-intermediate2.json > $HOMEDIR/genesis.json;
-fi
+cd $HOMEDIR
+wget -O genesis-template.json.txt ${ARTIFACTS_URL_PREFIX}genesis-template.json.txt || unsuccessful_exit "failed to download genesis-template.json.txt" 15;
+# Place our calculated difficulty into genesis file
+sed s/#DIFFICULTY/$DIFFICULTY/ $HOMEDIR/genesis-template.json.txt > $HOMEDIR/genesis-intermediate1.json;
+sed s/#PREFUND_ADDRESS/$ETHERBASE_ADDRESS/ $HOMEDIR/genesis-intermediate1.json > $HOMEDIR/genesis-intermediate2.json;
+sed s/#NETWORKID/$NETWORK_ID/ $HOMEDIR/genesis-intermediate2.json > $HOMEDIR/genesis.json;
 
 ##################
 # Extract gasLimit from genesis.json, needed for miner option targetgaslimit 
@@ -180,7 +169,7 @@ GASLIMIT=`cat "$GENESIS_FILE_PATH" | jq '.gasLimit'`;
 echo "===== Completed genesis file and pre-allocated account creation =====";
 
 cd $HOMEDIR
-wget -N ${ARTIFACTS_URL_PREFIX}/scripts/start-private-blockchain.sh || unsuccessful_exit "failed to download start-private-blockchain.sh" 16;
+wget -O start-private-blockchain.sh ${ARTIFACTS_URL_PREFIX}start-private-blockchain.sh || unsuccessful_exit "failed to download start-private-blockchain.sh" 16;
 
 ####################
 # Initialize geth for private network
@@ -209,18 +198,18 @@ if [ $NODE_TYPE -eq 0 ]; then # TX nodes only
 	echo "===== Starting admin website setup =====";
 	mkdir -p $ETHERADMIN_HOME/views/layouts;
 	cd $ETHERADMIN_HOME/views/layouts;
-	wget -N ${ARTIFACTS_URL_PREFIX}/scripts/etheradmin/main.handlebars || unsuccessful_exit "failed to download main.handlebars" 18;
+	wget -O main.handlebars ${ARTIFACTS_URL_PREFIX}main.handlebars || unsuccessful_exit "failed to download main.handlebars" 18;
 	cd $ETHERADMIN_HOME/views;
-	wget -N ${ARTIFACTS_URL_PREFIX}/scripts/etheradmin/etheradmin.handlebars || unsuccessful_exit "failed to download etheradmin.handlebars" 19;
-	wget -N ${ARTIFACTS_URL_PREFIX}/scripts/etheradmin/etherstartup.handlebars || unsuccessful_exit "failed to download etherstartup.handlebars" 20;
+	wget -O etheradmin.handlebars ${ARTIFACTS_URL_PREFIX}etheradmin.handlebars || unsuccessful_exit "failed to download etheradmin.handlebars" 19;
+	wget -O etherstartup.handlebars ${ARTIFACTS_URL_PREFIX}etherstartup.handlebars || unsuccessful_exit "failed to download etherstartup.handlebars" 20;
 	cd $ETHERADMIN_HOME;
-	wget -N ${ARTIFACTS_URL_PREFIX}/scripts/etheradmin/package.json || unsuccessful_exit "failed to download package.json" 21;
-	wget -N ${ARTIFACTS_URL_PREFIX}/scripts/etheradmin/npm-shrinkwrap.json || unsuccessful_exit "failed to download npm-shrinkwrap.json" 22;
+	wget -O package.json ${ARTIFACTS_URL_PREFIX}package.json || unsuccessful_exit "failed to download package.json" 21;
+	wget -O npm-shrinkwrap.json ${ARTIFACTS_URL_PREFIX}npm-shrinkwrap.json || unsuccessful_exit "failed to download npm-shrinkwrap.json" 22;
 	npm install || unsuccessful_exit "failed while running npm install" 23;
-	wget -N ${ARTIFACTS_URL_PREFIX}/scripts/etheradmin/app.js || unsuccessful_exit "failed to download app.js" 24;
+	wget -O app.js ${ARTIFACTS_URL_PREFIX}app.js || unsuccessful_exit "failed to download app.js" 24;
 	mkdir $ETHERADMIN_HOME/public;
 	cd $ETHERADMIN_HOME/public;
-	wget -N ${ARTIFACTS_URL_PREFIX}/scripts/etheradmin/skeleton.css || unsuccessful_exit "failed to download skeleton.css" 25;
+	wget -O skeleton.css ${ARTIFACTS_URL_PREFIX}skeleton.css || unsuccessful_exit "failed to download skeleton.css" 25;
 	echo "===== Completed admin website setup =====";
 fi
 

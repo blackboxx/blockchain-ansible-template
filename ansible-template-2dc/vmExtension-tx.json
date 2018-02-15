@@ -1,0 +1,74 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "numBootNodes": {
+      "type": "int"
+    },
+    "txVMNamePrefix": {
+      "type": "string"
+    },
+    "numTXNodes": {
+      "type": "int"
+    },
+    "mnVMNamePrefix": {
+      "type": "string"
+    },
+    "numMNNodes": {
+      "type": "string"
+    },
+    "fileLocation": {
+      "type": "string"
+    },
+    "adminUsername": {
+      "type": "string"
+    },
+    "ethereumAccountPsswd": {
+      "type": "securestring"
+    },
+    "ethereumAccountPassphrase": {
+      "type": "securestring"
+    },
+    "ethereumNetworkID": {
+      "type": "int"
+    },
+    "gethIPCPort": {
+      "type": "int"
+    },
+    "adminSitePort": {
+      "type": "int"
+    },
+    "location": {
+      "type": "string"
+    },
+    "index": {
+      "type": "string"
+    }
+  },
+  "variables": {
+    "txNode": 0,
+    "maxPeers": 25
+  },
+  "resources": [
+    {
+      "apiVersion": "2016-03-30",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('txVMNamePrefix'), parameters('index'), '/newuserscript')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "publisher": "Microsoft.Azure.Extensions",
+        "type": "CustomScript",
+        "typeHandlerVersion": "2.0",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": [
+            "[concat(parameters('fileLocation'), 'configure-geth.sh')]"
+          ]
+        },
+        "protectedSettings": {
+          "commandToExecute": "[concat('/bin/bash configure-geth.sh \"', parameters('adminUsername'), '\" \"', parameters('ethereumAccountPsswd'), '\" \"', parameters('ethereumAccountPassphrase'), '\" \"', parameters('fileLocation'), '\" \"', parameters('ethereumNetworkID'), '\" \"', variables('maxPeers'), '\" \"', variables('txNode'), '\" \"', parameters('gethIPCPort'), '\" \"', parameters('numBootNodes'), '\" \"', parameters('numMNNodes'), '\" \"', parameters('mnVMNamePrefix'), '\" \"', parameters('numTXNodes'), '\" \"', parameters('txVMNamePrefix'), '\" \"', parameters('adminSitePort'), '\"')]"
+        }
+      }
+    }
+  ]
+}

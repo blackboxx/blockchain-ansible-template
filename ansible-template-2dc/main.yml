@@ -15,25 +15,16 @@
       vars:
         location: '{{ loc.dc }}'
         fileLocation: https://raw.githubusercontent.com/luberan/blockchain-ansible-template/master/ansible-template-2dc/
-        subscription_id: 315e66d2-b933-43ae-9af1-e401260cff54
-        adminSSHKey: "ssh-rsa
-AAAAB3NzaC1yc2EAAAABJQAAAQEAjzz6DGtXvAkWhgmqKpUx4kTyuQCmjStL1CB/
-L5ZFaLfEBUA52tY8jzWih8AojoGJFiQv+2mPyIKi1k7zKpsbWDtxbAkAeCKhb+Gv
-on3ITNSSV17900qBySgrNpf35s/yKH7lVuMyVAU7GSrBMxEZwvG8L6w3uoacsATp
-AxMALyWBEzmySIm9iTM/6ks3Q7Ru4HWXLrfupVHfkZqwqhK1yywbZ+EcDTw4AO0N
-GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
-77MZ1MuBLfqP6qHDuRDQ1Du9k9Jw/BeYQ5+XB+RwWZyPM7Q1UQ=="
+        adminSSHKey: "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAnkcRVB1hFReDvvW9BeO3RHkmBdhTe1e4Mo7Mnq/s1WlM4SPz5gSnp++PfJzdNdpgSHayxc5mLxGHazcHlctr+n0myv32pQEAiWD6nRGy9D+lOy7EfH7Q8SHDRLSht0S3uUSshH+EgJomDsLVAfIr5biqJkjc+M6OPHXNd/U0kxDVldVnZN06n36OxBkK6uO0h2Lw+x1cw57AjwsRUYWD0KA85+f9gkAxFQVbsperJS7WztzUYjA7pjqivwqyMO84W8+QBowrxcUcDRhTIOYMVFusTUcebKJ76XNwkhMuwv56GblnUC6P4moAv2B+Qb9DftNmf93kdEeFnyFxmdXgMw== rsa-key-20180207"
         rgname: '{{ namePrefix + "-" + loc.dc }}'
         namePrefix: eth
-        companyName: trask
-        namingInfix: '{{ namePrefix + companyName }}'
         adminUsername: gethadmin
         numConsortiumMembers: 2
         numMiningNodesPerMember: 1
         txNodeVMSize: Standard_A1_v2
         numTXNodes: 1
         mnNodeVMSize: Standard_A1_v2
-        availabilitySetName: AvSet
+        availabilitySetName: '{{ namePrefix + "-avset" }}'
         httpPort: 80
         adminSitePort: 3000
         sshPort: 22
@@ -41,20 +32,19 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
         gethRPCPort: 8545
         loadBalancerInboundNatRuleNamePrefix: ssh-vm
         numMNNodes: '{{ numConsortiumMembers * numMiningNodesPerMember }}'
-        loadBalancerName: '{{ namingInfix + "-lb" }}'
+        loadBalancerName: '{{ namePrefix + "-lb" }}'
         loadBalancerBackendAddressPoolName: LoadBalancerBackend1
-        mnVMNamePrefix: '{{ namingInfix + "-mn" }}'
-        mnNICPrefix: nic-mn
-        txVMNamePrefix: '{{ namingInfix + "-tx" }}'
-        txSubnetName: '{{ namingInfix + "tx" }}'
+        mnVMNamePrefix: '{{ namePrefix + "-mn" }}'
+        mnNICPrefix: '{{ namePrefix + "-nic-mn" }}'
+        txVMNamePrefix: '{{ namePrefix + "-tx" }}'
+        txSubnetName: '{{ namePrefix + "-tx-subnet" }}'
         txSubnetPrefix: '{{ loc.txSubnet }}'
-        txNIPrefix: nic-tx
-        virtualNetworkName: '{{ namingInfix + "vnet" }}'
-        txNsgName: '{{ namingInfix + "TXNsg" }}'
-        mnNsgName: '{{ namingInfix + "MNNsg" }}'
+        txNIPrefix: '{{ namePrefix + "-nic-tx" }}'
+        virtualNetworkName: '{{ namePrefix + "-vnet" }}'
+        txNsgName: '{{ namePrefix + "-txnsg" }}'
+        mnNsgName: '{{ namePrefix + "-mnnsg" }}'
         addressPrefix: '{{ loc.netAddressPrefix }}'
         netNum: '{{ loc.net }}'
-        vnetID: '{{ "/subscriptions/" + subscription_id + "/resourceGroup/" + rg + "/providers/Microsoft.Network/virtualNetworks" }}'
         numSubnets: '{{ numConsortiumMembers }}'
         ubuntuImage: {
           "publisher": "Canonical",
@@ -62,6 +52,8 @@ GC6POdt4LafB6ujW3OeWgaAeIaPPnfr32J8mudhDzZO7xuSgAzQYSkvHOUGqopfp
           "sku": "16.04-LTS",
           "version": "latest"
         }
+        ethereumNetworkID: 72
+        gethIPCPort: 30303
       with_items:
         - { dc: 'westeurope', netAddressPrefix: '10.0.0.0/16', txSubnet: '10.0.0.0/24', net: 0 }
         - { dc: 'eastus', netAddressPrefix: '10.1.0.0/16', txSubnet: '10.1.0.0/24', net: 1 }
