@@ -14,7 +14,7 @@
     location: westeurope
     fileLocation: https://raw.githubusercontent.com/luberan/blockchain-ansible-template/master/ansible-template-1dc/
     adminSSHKey: "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAnkcRVB1hFReDvvW9BeO3RHkmBdhTe1e4Mo7Mnq/s1WlM4SPz5gSnp++PfJzdNdpgSHayxc5mLxGHazcHlctr+n0myv32pQEAiWD6nRGy9D+lOy7EfH7Q8SHDRLSht0S3uUSshH+EgJomDsLVAfIr5biqJkjc+M6OPHXNd/U0kxDVldVnZN06n36OxBkK6uO0h2Lw+x1cw57AjwsRUYWD0KA85+f9gkAxFQVbsperJS7WztzUYjA7pjqivwqyMO84W8+QBowrxcUcDRhTIOYMVFusTUcebKJ76XNwkhMuwv56GblnUC6P4moAv2B+Qb9DftNmf93kdEeFnyFxmdXgMw== rsa-key-20180207"
-    rgname: '{{ namePrefix + "-" + location + "-dev" }}'
+    rgname: '{{ namePrefix + "-" + location + "-dev-test" }}'
     namePrefix: eth
     adminUsername: gethadmin
     numConsortiumMembers: 2
